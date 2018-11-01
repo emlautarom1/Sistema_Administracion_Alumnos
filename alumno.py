@@ -67,7 +67,7 @@ class Alumno:
         self.nacimiento = nacimiento
 
     def get_cursando(self):
-        return self.cursando
+        return self.curso
 
     def set_curso(self, curso: int):
         self.curso = curso

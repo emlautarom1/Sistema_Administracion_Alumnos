@@ -4,7 +4,6 @@ from bisect import insort
 
 
 class TMaterias:
-    # Listado = [ Materia]
     def __init__(self):
         self.listado = []
         self.key_alumnos = []

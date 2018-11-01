@@ -22,7 +22,7 @@ class BDEscuela ():
         }
         self.tablas = [TAlumnos(), TMaterias()]
 
-    def login_check(self, username: str, password: str):
+    def login(self, username: str, password: str):
         for user in self.acceso:
             if user.__contains__(username):
                 if self.acceso[user] == password:

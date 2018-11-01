@@ -43,18 +43,7 @@ def storesesion():
 bd_escuela = BDEscuela()
 username = 'P-admin'
 password = 'ad1'
-# bd_escuela.login_check(username, password)
-
-
-def my_filter(acumulador: int, x: int, limite: int):
-    if x > limite:
-        return x + acumulador
-
-
-nums = [8, 4, 2, 0, 6]
-glob_limite = 3
-
-result = reduce(lambda ac, elem: my_filter(ac, elem, glob_limite), nums)
+bd_escuela.login(username, password)
 
 # Operaciones:
 #   Login: logincheck() retorna el estado de login, o un error en caso de que no se haya podiodo loguear
@@ -62,7 +51,7 @@ result = reduce(lambda ac, elem: my_filter(ac, elem, glob_limite), nums)
 #   Eliminar usuario: removeuser() toma un useracces y lo elimina de la base de datos.
 #   CRUD de Alumnos: definido en TAlumnos.
 #   Listado por inasistencias: definido en TAlumnos
+#   Listado ordenado por curso: definido en TAlumnos
 #
 #   Inicializacion de Sesion: pendiente
 #   Alamcenamiento en disco: pendiente
-#   Listado ordenado por curso: pendiente
