@@ -1,33 +1,27 @@
 from bdescuela import BDEscuela
-
-
-def logincheck():
-    for user in bd_escuela.acceso:
-        if user.__contains__(username):
-            if bd_escuela.acceso[user] == password:
-                return user[0]
-            return "Bad password"
-    return "No username"
+from functools import reduce
+from bisect import insort
 
 
 def adduser():
-    if loginStatus == 'P' or loginStatus == 'A':
+    if bd_escuela.is_privileged():
         newusername = input('Input user: ')
         newpassword = input('Input password: ')
         privileges = input('Input priveleges: ')
-        key = privileges+'-'+newusername
         try:
-            bd_escuela.addaccess(key, newpassword)
+            bd_escuela.addaccess(newusername, newpassword, privileges)
             return True
         except KeyError:
             print('User already in database!')
+        except ValueError:
+            print('Invalid privileges!')
     else:
         print('Unprivileged user')
     return False
 
 
 def removeuser(useraccess):
-    if loginStatus == 'P' or loginStatus == 'A':
+    if bd_escuela.is_privileged():
         try:
             bd_escuela.removeaccess(useraccess)
             return True
@@ -49,7 +43,18 @@ def storesesion():
 bd_escuela = BDEscuela()
 username = 'P-admin'
 password = 'ad1'
-loginStatus = logincheck()
+# bd_escuela.login_check(username, password)
+
+
+def my_filter(acumulador: int, x: int, limite: int):
+    if x > limite:
+        return x + acumulador
+
+
+nums = [8, 4, 2, 0, 6]
+glob_limite = 3
+
+result = reduce(lambda ac, elem: my_filter(ac, elem, glob_limite), nums)
 
 # Operaciones:
 #   Login: logincheck() retorna el estado de login, o un error en caso de que no se haya podiodo loguear
