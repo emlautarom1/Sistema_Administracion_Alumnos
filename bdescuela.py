@@ -89,16 +89,28 @@ class BDEscuela ():
         except:
             raise ValueError('Invalid table name')
 
-    def backup(self, f: str):
-        dumped = json.dumps(self, default=lambda o: o.__dict__,
-                            sort_keys=True, indent=4)
-        f = open(f, 'w')
-        f.write(dumped)
-        f.close()
+    def backup(self, name: str, folder: str):
+        dumped = json.dumps(self,
+                            default=lambda o: o.__dict__,
+                            sort_keys=True,
+                            indent=4)
+        try:
+            f = open(folder + name, 'w')
+            f.write(dumped)
+            f.close()
+        except OSError:
+            print('File {0} in {1} could not be opened.'.format(name, folder))
 
-    def carga_bd(self, f: str):
-        n = open(f, 'r')
-        data = n.read()
+    def carga_bd(self, name: str, folder: str):
+
+        try:
+            f = open(folder + name, 'r')
+            data = f.read()
+            f.close()
+        except OSError:
+            print('File {0} in {1} could not be opened.'.format(name, folder))
+            return
+
         backup = json.loads(data)
         for alum in backup['tablas'][0]['listado'].values():
             try:

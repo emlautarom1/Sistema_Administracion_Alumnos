@@ -111,8 +111,6 @@ class Alumno:
         self.baja = baja
 
     def get_username(self):
-        if type(self.username) == tuple:
-            print('FAIL')
         return self.username
 
     def set_username(self, username: str):

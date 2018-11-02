@@ -6,8 +6,8 @@ import copy
 privilege = 'P'
 username = 'admin'
 password = 'ad1'
-save_file = '2018_ProgIII/PMP_Python/1_PracLab/database.json'
-
+file_folder = '2018_ProgIII/PMP_Python/1_PracLab/'
+file_name = 'database.json'
 # System stress test:
 
 # Init database
@@ -40,8 +40,6 @@ bd_escuela.mod_alumno(al)
 # Listado_inas
 inas = bd_escuela.get_table('T-alumnos').listado_inas()
 
-
-
 # Listado_reg_x_curso
 reg_x_curso = bd_escuela.get_table('T-alumnos').listado_reg_x_curso(3)
 
@@ -58,7 +56,6 @@ bd_escuela.get_table('T-materias').alta(mat)
 bd_escuela.get_table('T-materias').alta(mat2)
 bd_escuela.get_table('T-materias').alta(mat3)
 
-
 # Materias de 4000
 materias = bd_escuela.get_table('T-materias').get_materias_de_alumno(4000)
 for m in materias:
@@ -67,7 +64,7 @@ for m in materias:
 print('------------')
 
 # Make system backup
-bd_escuela.backup(save_file)
+bd_escuela.backup(file_name, file_folder)
 
 # Remove Materia
 bd_escuela.get_table('T-materias').baja(4000, 'Lengua')
@@ -81,7 +78,7 @@ bd_escuela.get_table('T-materias').modificar(mat_mod)
 bd_escuela.baja_alumno(4000)
 
 # Reload saved data
-bd_escuela.carga_bd(save_file)
+bd_escuela.carga_bd(file_name, file_folder)
 print('Should be "Anaconda"')
 print(bd_escuela.cons_alumno(4000).get_apellido())
 print('------------')
