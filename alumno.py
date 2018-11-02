@@ -8,21 +8,41 @@ class Alumno:
         'NA': 'No aceptable'
     }
 
-    def __init__(self, nro_reg, nombre, apellido, dni, direccion, telefono, email, nacimiento, curso, username, password):
-        self.nro_reg = nro_reg
-        self.nombre = nombre
-        self.apellido = apellido
-        self.dni = dni
-        self.direccion = direccion
-        self.telefono = telefono
-        self.email = email
-        self.nacimiento = nacimiento
-        self.curso = curso
-        self.alta = datetime.datetime.now()
-        self.baja = None
-        self.login = (username, password)
-        self.concepto = Alumno.conceptos['MA']
-        self.inasistencias = 0
+    def __init__(self,
+                 nro_reg=0,
+                 nombre='none',
+                 apellido='none',
+                 dni=0,
+                 direccion='none',
+                 telefono='none',
+                 email='none',
+                 nacimiento=[0, 0, 0],
+                 curso=0,
+                 username='none',
+                 password='none',
+                 from_dict={},
+                 ):
+        if len(from_dict) != 0:
+            for key, value in from_dict.items():
+                setattr(self, key, value)
+        else:
+            self.nro_reg = nro_reg
+            self.nombre = nombre
+            self.apellido = apellido
+            self.dni = dni
+            self.direccion = direccion
+            self.telefono = telefono
+            self.email = email
+            self.nacimiento = nacimiento
+            self.curso = curso
+            self.alta = (datetime.datetime.now().day,
+                         datetime.datetime.now().month,
+                         datetime.datetime.now().year)
+            self.baja = [0, 0, 0]
+            self.username = username
+            self.password = password
+            self.concepto = Alumno.conceptos['MA']
+            self.inasistencias = 0
 
     def get_nro_reg(self):
         return self.nro_reg
@@ -63,10 +83,10 @@ class Alumno:
     def get_nacimiento(self):
         return self.nacimiento
 
-    def set_nacimiento(self, nacimiento: datetime):
+    def set_nacimiento(self, nacimiento: list):
         self.nacimiento = nacimiento
 
-    def get_cursando(self):
+    def get_curso(self):
         return self.curso
 
     def set_curso(self, curso: int):
@@ -75,20 +95,28 @@ class Alumno:
     def get_alta(self):
         return self.alta
 
-    def set_alta(self, alta: datetime):
-        self.alta = datetime
+    def set_alta(self, alta: list):
+        self.alta = alta
 
     def get_baja(self):
         return self.baja
 
-    def set_baja(self, baja: datetime):
-        self.baja = datetime
+    def set_baja(self, baja: list):
+        self.baja = baja
 
     def get_username(self):
-        return self.login[0]
+        if type(self.username) == tuple:
+            print('FAIL')
+        return self.username
 
     def set_username(self, username: str):
-        self.login = (username, self.login[1])
+        self.username = username
+
+    def get_password(self):
+        return self.password
+
+    def set_password(self, password: str):
+        self.password = password
 
     def get_concepto(self):
         return self.concepto
@@ -99,8 +127,11 @@ class Alumno:
     def get_inasistencias(self):
         return self.inasistencias
 
+    def set_inasistencias(self, inasistencias: int):
+        self.inasistencias = inasistencias
+
     def update_inasistencias(self):
         self.inasistencias += self.inasistencias
 
     def correct_password(self, psw: str):
-        return self.login[1] == psw
+        return self.password == psw

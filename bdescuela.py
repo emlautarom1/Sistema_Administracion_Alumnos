@@ -1,66 +1,113 @@
+from alumno import Alumno
+from materia import Materia
 from talumnos import TAlumnos
 from tmaterias import TMaterias
 from singelton import Singleton
+import json
 
 
 class BDEscuela ():
 
     def __init__(self):
-        self.cantUsuarios = 0
+        self.cant_usuarios = 1
         self.acceso = {
             'P-admin': 'ad1'
         }
-        self.login_status = ''
-        # Claves de la forma:
-        #   A-<username> : <password>
-        #   P-<username> : <password>
-        #   D-<username> : <password>
+        self.privilege = 'NONE'
         self.priv_keys = ['A', 'P', 'D']
-        self.nmbre_tablas = {
+        self.nombre_tablas = {
             'T-alumnos': 0,
             'T-materias': 1
         }
         self.tablas = [TAlumnos(), TMaterias()]
 
-    def login(self, username: str, password: str):
+    def inic_esc(self, privilege: str, username: str, password: str):
+        key = privilege + '-' + username
         for user in self.acceso:
-            if user.__contains__(username):
+            if user == key:
                 if self.acceso[user] == password:
-                    self.login_status = user[0]
+                    self.privilege = privilege
+                    # Set user privileges
                     return
                 else:
-                    raise ValueError
+                    raise ValueError('Incorrect password')
         else:
-            raise KeyError
-            # Username not in acceso
+            raise KeyError('User not in databse')
 
-    def is_privileged(self):
-        return self.login_status == 'P' or self.login_status == 'D'
-
-    def removeaccess(self, user: str):
+    def elim_usuario(self, user: str):
         if self.is_privileged():
             if user in self.acceso:
                 self.acceso.pop(user)
+                self.cant_usuarios -= 1
             else:
-                raise KeyError
+                raise KeyError('User not in database')
         else:
-            raise PermissionError
+            raise PermissionError('Not enough privileges')
 
-    def addaccess(self, username, password, privilege, alumno=None):
+    def reg_usuario(self, privilege: str, username: str, password: str):
         if self.is_privileged():
             if privilege in self.priv_keys:
                 key = privilege + '-' + username
                 if key in self.acceso:
-                    raise KeyError
+                    raise KeyError('User already in database')
                 else:
                     self.acceso[key] = password
-                    if privilege == 'A':
-                        self.gettable('T-alumnos').alta(alumno)
+                    self.cant_usuarios += 1
             else:
-                raise ValueError
+                raise ValueError('Invalid privilege')
         else:
-            raise PermissionError
+            raise PermissionError('Not enough privileges')
 
-    def gettable(self, tablename: str):
-        tablekey = self.nmbre_tablas[tablename]
-        return self.tablas[tablekey]
+    def reg_alumno(self, alumno: Alumno):
+        self.reg_usuario('A', alumno.get_username(), alumno.get_password())
+        self.get_table('T-alumnos').alta(alumno)
+
+    def baja_alumno(self, alumno: Alumno):
+        self.elim_usuario('A-' + alumno.get_username())
+        self.get_table('T-alumnos').baja(alumno.get_nro_reg())
+        self.get_table('T-materias').baja_total(alumno.get_nro_reg())
+        # Remove also Materias from alumno
+
+    def mod_alumno(self, alumno: Alumno):
+        self.baja_alumno(alumno)
+        self.reg_alumno(alumno)
+
+    def is_privileged(self):
+        return self.privilege == 'P' or self.privilege == 'D'
+
+    def get_table(self, tablename: str):
+        try:
+            tablekey = self.nombre_tablas[tablename]
+            return self.tablas[tablekey]
+        except:
+            raise ValueError('Invalid table name')
+
+    def backup(self, f: str):
+        dumped = json.dumps(self, default=lambda o: o.__dict__,
+                            sort_keys=True, indent=4)
+        f = open(f, 'w')
+        f.write(dumped)
+        f.close()
+
+    def carga_bd(self, f: str):
+        n = open(f, 'r')
+        data = n.read()
+        backup = json.loads(data)
+        for alum in backup['tablas'][0]['listado'].values():
+            try:
+                self.reg_alumno(Alumno(from_dict=alum))
+            except KeyError:
+                print('User already in db, reading next...')
+
+        self.acceso.update(backup['acceso'])
+        self.cant_usuarios = len(self.acceso)
+
+        for val in backup['tablas'][1]['listado']:
+            materia = Materia()
+            for key, value in val.items():
+                setattr(materia, key, value)
+            try:
+                self.get_table('T-materias').alta(materia)
+            except:
+                print('Materia {0} from {1} was reloaded, continue...'.format(
+                    materia.nombre, materia.nro_reg))

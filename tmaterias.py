@@ -6,7 +6,6 @@ from bisect import insort
 class TMaterias:
     def __init__(self):
         self.listado = []
-        self.key_alumnos = []
         self.key_materias = [
             'Matematica',
             'Lengua',
@@ -19,13 +18,44 @@ class TMaterias:
             'Computacion'
         ]
 
-    def init_materia(self, nro_reg: str):
-        if nro_reg not in self.key_alumnos:
-            for key_materia in self.key_materias:
-                self.listado.append(Materia(key_materia, nro_reg))
-            self.key_alumnos.append(nro_reg)
+    #
+    # REMOVE KEY_ALUMNOS
+    #
+
+    def alta(self, mat: Materia):
+        for val in self.listado:
+            if mat.get_nombre() == val.get_nombre() and mat.get_nro_reg() == val.get_nro_reg():
+                raise KeyError('Materia already in database')
+        self.listado.append(mat)
+
+    def baja(self, nro_reg: int, nom_mat: str):
+        for val in self.listado:
+            if nro_reg == val.get_nro_reg() and nom_mat == val.get_nombre():
+                self.listado.remove(val)
+                break
         else:
-            raise KeyError
+            raise KeyError('Materia not in database')
+
+    def baja_total(self, nro_reg: int):
+        to_remove = []
+        for val in self.listado:
+            if val.get_nro_reg() == nro_reg:
+                to_remove.append(val)
+        if len(to_remove) == 0:
+            raise KeyError('No materias with designated nro_reg')
+        for val in to_remove:
+            self.listado.remove(val)
+
+    def consulta(self, nro_reg: int, nom_mat: str):
+        for val in self.listado:
+            if nro_reg == val.get_nro_reg()and nom_mat == val.get_nombre():
+                return val
+        else:
+            raise KeyError('Materia not in database')
+
+    def init_materia(self, nro_reg: str):
+        for key_materia in self.key_materias:
+            self.alta(Materia(key_materia, nro_reg))
 
     def get_materias_de_alumno(self, nro_reg: int):
         return filter(lambda m: m.get_nro_reg() == nro_reg, self.listado)

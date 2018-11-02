@@ -22,13 +22,10 @@ class TAlumnos:
         self.listado = {}
 
     def alta(self, alumno: Alumno):
-        if alumno is not None:
-            if alumno.nro_reg not in self.listado:
-                self.listado[alumno.nro_reg] = alumno
-            else:
-                raise KeyError
+        if alumno.get_nro_reg() not in self.listado:
+            self.listado[alumno.get_nro_reg()] = alumno
         else:
-            raise ValueError
+            raise KeyError
 
     def baja(self, nro_reg: int):
         if nro_reg in self.listado:
@@ -42,11 +39,11 @@ class TAlumnos:
         else:
             raise KeyError
 
-    def listadoinas(self):
+    def listado_inas(self):
         # Returns list of Alumnos
         return filter(lambda alumno: alumno.inasistencias > 15, self.listado.values())
 
-    def listadoregxcurso(self, curso: str):
+    def listado_reg_x_curso(self, curso: str):
         mapped = map(lambda a:
                      (
                          a.get_curso(),
