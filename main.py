@@ -1,91 +1,93 @@
 from bdescuela import BDEscuela
 from alumno import Alumno
 from materia import Materia
-
-# def add_user():
-#     if bd_escuela.is_privileged():
-#         newusername = input('Input user: ')
-#         newpassword = input('Input password: ')
-#         privileges = input('Input priveleges: ')
-#         try:
-#             bd_escuela.reg_usuario(newusername, newpassword, privileges)
-#             if privilege == 'A':
-#                 pass
-#                 # Read new Alumno
-#                 alumno = Alumno()
-#                 bd_escuela.get_table('T-alumnos').alta(alumno)
-#             return True
-#         except KeyError:
-#             print('User already in database!')
-#         except ValueError:
-#             print('Invalid privileges!')
-#     else:
-#         print('Unprivileged user')
-#     return False
-
-# def remove_user(username):
-#     if bd_escuela.is_privileged():
-#         try:
-#             bd_escuela.elim_usuario(username)
-#             return True
-#         except KeyError:
-#             print('User not in database!')
-#     else:
-#         print('Unprivileged user')
-#     return False
+import copy
 
 privilege = 'P'
 username = 'admin'
 password = 'ad1'
-save_file = '2018_ProgIII/PMP_Python/1_PracLab/pray.json'
+save_file = '2018_ProgIII/PMP_Python/1_PracLab/database.json'
 
-bd_escuela = BDEscuela()
+# System stress test:
+
 # Init database
-bd_escuela.inic_esc(privilege, username, password)
+bd_escuela = BDEscuela()
 # Login
+bd_escuela.inic_esc(privilege, username, password)
+# Add new user
+bd_escuela.reg_usuario('P', 'python_admin', 'admin123')
+# Create new Alumno
 al = Alumno(
     nro_reg=4000,
-    nombre='Pepe',
-    apellido='Test',
+    nombre='Python',
+    apellido='Anaconda',
     dni=41140240,
     direccion='My Address',
-    telefono='54654654',
+    telefono='555-555-5555',
     email='test@sample.com',
-    nacimiento=[4, 4, 2000],
-    curso=2,
+    nacimiento=[1, 1, 2000],
+    curso=3,
     username='pythoniscool',
     password='123456'
 )
-# Create new Alumno
-bd_escuela.reg_alumno(al)
 # Register Alumno
+bd_escuela.reg_alumno(al)
+
+# Modify Alumno
+al.set_inasistencias(18)
+bd_escuela.mod_alumno(al)
+
+# Listado_inas
+inas = bd_escuela.get_table('T-alumnos').listado_inas()
+
+
+
+# Listado_reg_x_curso
+reg_x_curso = bd_escuela.get_table('T-alumnos').listado_reg_x_curso(3)
+
+# Create new Materias
 mat = Materia('Matematica', 4000)
-mat.set_notas([8.50, 4.25, 7.80])
+mat.set_notas([9, 9, 9])
 mat2 = Materia('Lengua', 4000)
 mat2.set_notas([1, 1, 1])
 mat3 = Materia('Etica', 4000)
 mat3.set_notas([4, 4, 4])
-# Create new Materias
+
+# Add Materias
 bd_escuela.get_table('T-materias').alta(mat)
 bd_escuela.get_table('T-materias').alta(mat2)
 bd_escuela.get_table('T-materias').alta(mat3)
-# Add Materias
-bd_escuela.backup(save_file)
-# Make system backup
-bd_escuela.baja_alumno(al)
-# Remove alumno (also removes mat and mat2)
-bd_escuela.reg_usuario('P', 'juan24', '123456789')
-# Add new user
-bd_escuela.carga_bd(save_file)
-# Reload saved data
-print('End')
 
-# Operaciones:
-#   Login: logincheck() retorna el estado de login, o un error en caso de que no se haya podiodo loguear
-#   Añadir usuario: adduser() lee un usuario, contraseña y privilegios y los carga a la base de datos.
-#   Eliminar usuario: removeuser() toma un useracces y lo elimina de la base de datos.
-#   CRUD de Alumnos: definido en TAlumnos.
-#   Listado por inasistencias: definido en TAlumnos
-#   Listado ordenado por curso: definido en TAlumnos
-#   Inicializacion de Sesion: definido en BDAlumnos
-#   Alamcenamiento en disco: definido en BDAlumnos
+
+# Materias de 4000
+materias = bd_escuela.get_table('T-materias').get_materias_de_alumno(4000)
+for m in materias:
+    print(m.get_nombre())
+    print(m.get_notas())
+print('------------')
+
+# Make system backup
+bd_escuela.backup(save_file)
+
+# Remove Materia
+bd_escuela.get_table('T-materias').baja(4000, 'Lengua')
+
+# Modify Materia
+mat_mod = copy.copy(mat)
+mat_mod.set_notas([7, 7, 7])
+bd_escuela.get_table('T-materias').modificar(mat_mod)
+
+# Remove Alumno (removes all Materias)
+bd_escuela.baja_alumno(4000)
+
+# Reload saved data
+bd_escuela.carga_bd(save_file)
+print('Should be "Anaconda"')
+print(bd_escuela.cons_alumno(4000).get_apellido())
+print('------------')
+
+print('Should be [9, 9, 9]:')
+print(bd_escuela.get_table('T-materias').consulta(4000, 'Matematica').get_notas())
+print('------------')
+
+print('All OPs done with no errors...')

@@ -18,19 +18,15 @@ class TMaterias:
             'Computacion'
         ]
 
-    #
-    # REMOVE KEY_ALUMNOS
-    #
-
     def alta(self, mat: Materia):
         for val in self.listado:
             if mat.get_nombre() == val.get_nombre() and mat.get_nro_reg() == val.get_nro_reg():
                 raise KeyError('Materia already in database')
         self.listado.append(mat)
 
-    def baja(self, nro_reg: int, nom_mat: str):
+    def baja(self, nro_reg: int, nombre: str):
         for val in self.listado:
-            if nro_reg == val.get_nro_reg() and nom_mat == val.get_nombre():
+            if nro_reg == val.get_nro_reg() and nombre == val.get_nombre():
                 self.listado.remove(val)
                 break
         else:
@@ -46,9 +42,13 @@ class TMaterias:
         for val in to_remove:
             self.listado.remove(val)
 
-    def consulta(self, nro_reg: int, nom_mat: str):
+    def modificar(self, mat: Materia):
+        self.baja(mat.get_nro_reg(), mat.get_nombre())
+        self.alta(mat)
+
+    def consulta(self, nro_reg: int, nombre: str):
         for val in self.listado:
-            if nro_reg == val.get_nro_reg()and nom_mat == val.get_nombre():
+            if nro_reg == val.get_nro_reg()and nombre == val.get_nombre():
                 return val
         else:
             raise KeyError('Materia not in database')
@@ -58,14 +58,4 @@ class TMaterias:
             self.alta(Materia(key_materia, nro_reg))
 
     def get_materias_de_alumno(self, nro_reg: int):
-        return filter(lambda m: m.get_nro_reg() == nro_reg, self.listado)
-
-    def get_lis_curso(self, curso: int):
-        mapped = map(lambda a: (a.get_curso(),  a.get_nombre(),
-                                a.get_nro_reg(), a.get_apellido()))
-        return reduce(lambda l, a: add_sorted_curso(l, a, curso), mapped)
-
-
-def add_sorted_curso(l: list, a: tuple, curso: int):
-    if a[0] == curso:
-        insort(l, a)
+        return list(filter(lambda m: m.get_nro_reg() == nro_reg, self.listado))

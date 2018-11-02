@@ -16,6 +16,16 @@ def aux(l: list, a: tuple, c: int):
     return l
 
 
+def aux_2(a: Alumno):
+    return (
+        a.get_curso(),
+        a.get_apellido(),
+        a.get_nombre(),
+        a.get_nro_reg(),
+        a.get_dni()
+    )
+
+
 class TAlumnos:
 
     def __init__(self):
@@ -41,15 +51,9 @@ class TAlumnos:
 
     def listado_inas(self):
         # Returns list of Alumnos
-        return filter(lambda alumno: alumno.inasistencias > 15, self.listado.values())
+        return list(filter(lambda alumno: alumno.inasistencias > 15, self.listado.values()))
 
-    def listado_reg_x_curso(self, curso: str):
-        mapped = map(lambda a:
-                     (
-                         a.get_curso(),
-                         a.get_apellido(),
-                         a.get_nombre(),
-                         a.get_nro_reg()
-                     ),
-                     self.listado)
+    def listado_reg_x_curso(self, curso: int):
+        # Returns list of tuples : (curso, apellido, nombre, nro_reg, dni)
+        mapped = list(map(lambda a: aux_2(a), self.listado.values()))
         return reduce(lambda acc, x: aux(acc, x, curso), mapped, [])

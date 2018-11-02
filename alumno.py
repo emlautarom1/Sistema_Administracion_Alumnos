@@ -50,6 +50,12 @@ class Alumno:
     def set_nro_reg(self, nro_reg: int):
         self.nro_reg = nro_reg
 
+    def get_nombre(self):
+        return self.nombre
+
+    def set_nombre(self, nombre: str):
+        self.nombre = nombre
+
     def get_apellido(self):
         return self.apellido
 

@@ -34,10 +34,11 @@ class BDEscuela ():
         else:
             raise KeyError('User not in databse')
 
-    def elim_usuario(self, user: str):
+    def elim_usuario(self, privilege: str, username: str):
         if self.is_privileged():
-            if user in self.acceso:
-                self.acceso.pop(user)
+            key = privilege+'-'+username
+            if key in self.acceso:
+                self.acceso.pop(key)
                 self.cant_usuarios -= 1
             else:
                 raise KeyError('User not in database')
@@ -62,17 +63,21 @@ class BDEscuela ():
         self.reg_usuario('A', alumno.get_username(), alumno.get_password())
         self.get_table('T-alumnos').alta(alumno)
 
-    def baja_alumno(self, alumno: Alumno):
-        self.get_table('T-materias').baja_total(alumno.get_nro_reg())
+    def baja_alumno(self, nro_reg: int):
+        username = self.get_table('T-alumnos').consulta(nro_reg).get_username()
+        self.get_table('T-materias').baja_total(nro_reg)
         # Remove materias from alumno
-        self.get_table('T-alumnos').baja(alumno.get_nro_reg())
+        self.get_table('T-alumnos').baja(nro_reg)
         # Remove alumno from table
-        self.elim_usuario('A-' + alumno.get_username())
+        self.elim_usuario('A', username)
         # Remove alumno from acces
 
     def mod_alumno(self, alumno: Alumno):
         self.get_table('T-alumnos').baja(alumno.get_nro_reg())
         self.get_table('T-alumnos').alta(alumno)
+
+    def cons_alumno(self, nro_reg: int):
+        return self.get_table('T-alumnos').consulta(nro_reg)
 
     def is_privileged(self):
         return self.privilege == 'P' or self.privilege == 'D'
@@ -99,7 +104,7 @@ class BDEscuela ():
             try:
                 self.reg_alumno(Alumno(from_dict=alum))
             except KeyError:
-                print('User already in db, reading next...')
+                print('Alumno already in database, skipping...')
 
         self.acceso.update(backup['acceso'])
         self.cant_usuarios = len(self.acceso)
@@ -111,5 +116,5 @@ class BDEscuela ():
             try:
                 self.get_table('T-materias').alta(materia)
             except:
-                print('Materia {0} from {1} was reloaded, continue...'.format(
+                print('Materia {0} from {1} already in database, skipping...'.format(
                     materia.nombre, materia.nro_reg))
