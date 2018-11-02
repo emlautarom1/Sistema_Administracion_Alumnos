@@ -63,14 +63,16 @@ class BDEscuela ():
         self.get_table('T-alumnos').alta(alumno)
 
     def baja_alumno(self, alumno: Alumno):
-        self.elim_usuario('A-' + alumno.get_username())
-        self.get_table('T-alumnos').baja(alumno.get_nro_reg())
         self.get_table('T-materias').baja_total(alumno.get_nro_reg())
-        # Remove also Materias from alumno
+        # Remove materias from alumno
+        self.get_table('T-alumnos').baja(alumno.get_nro_reg())
+        # Remove alumno from table
+        self.elim_usuario('A-' + alumno.get_username())
+        # Remove alumno from acces
 
     def mod_alumno(self, alumno: Alumno):
-        self.baja_alumno(alumno)
-        self.reg_alumno(alumno)
+        self.get_table('T-alumnos').baja(alumno.get_nro_reg())
+        self.get_table('T-alumnos').alta(alumno)
 
     def is_privileged(self):
         return self.privilege == 'P' or self.privilege == 'D'
