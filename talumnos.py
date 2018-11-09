@@ -4,15 +4,12 @@ from functools import reduce
 
 def aux(l: list, a: tuple, c: int):
     if a[0] == c:
-        if len(l) == 0:
-            l.append(a)
+        for i, val in enumerate(l):
+            if a[1] < val[1]:
+                l.insert(i, a)
+                break
         else:
-            for i, val in enumerate(l):
-                if a[1] < val[1]:
-                    l.insert(i, a)
-                    break
-            else:
-                l.append(a)
+            l.append(a)
     return l
 
 
