@@ -44,7 +44,7 @@ def swap_view(old_view, new_view):
     elif new_view == 'consulta_alumno':
         ConsultaAlumno(root)
     elif new_view == 'alta_alumno':
-        raise NotImplementedError
+        AltaAlumno(root)
     elif new_view == 'baja_alumno':
         raise NotImplementedError
     elif new_view == 'modificar_alumno':
@@ -284,7 +284,7 @@ class ConsultaAlumno:
         self.nacimiento_data = Label(self.frame, text='---')
         self.curso_label = Label(self.frame, text='Curso:')
         self.curso_data = Label(self.frame, text='---')
-        
+
         # Layout
         self.nro_reg_label.grid(row=1, column=1, columnspan=2, sticky='EW')
         self.nro_reg_entry.grid(row=2, column=1, columnspan=2, sticky='EW')
@@ -312,6 +312,71 @@ class ConsultaAlumno:
     def search(self):
         self.nombre_data.config(text='dummy')
         print('Buscando...')
+
+    def cancel(self):
+        print('Cancelando...')
+        swap_view(self, 'main_menu')
+
+    def terminate(self):
+        self.frame.pack_forget()
+        self.frame.destroy()
+
+
+class AltaAlumno:
+    def __init__(self, master):
+        self.frame = Frame(master)
+        self.frame.pack()
+        # Set title
+        master.title('Alta')
+        self.nro_reg_label = Label(self.frame, text='Número de Registro:')
+        self.nro_reg_entry = Entry(self.frame)
+        self.create_button = Button(
+            self.frame, text='Cargar', foreground='green', command=self.alta)
+        self.return_button = Button(
+            self.frame, text='Cancelar', foreground='red', command=self.cancel)
+        self.nombre_label = Label(self.frame, text='Nombre:')
+        self.nombre_entry = Entry(self.frame)
+        self.apellido_label = Label(self.frame, text='Apellido:')
+        self.apellido_entry = Entry(self.frame)
+        self.dni_label = Label(self.frame, text='DNI:')
+        self.dni_entry = Entry(self.frame)
+        self.direccion_label = Label(self.frame, text='Dirección:')
+        self.direccion_entry = Entry(self.frame)
+        self.telefono_label = Label(self.frame, text='Teléfono:')
+        self.telefono_entry = Entry(self.frame)
+        self.email_label = Label(self.frame, text='Email')
+        self.email_entry = Entry(self.frame)
+        self.nacimiento_label = Label(self.frame, text='Fecha Nacimiento:')
+        self.nacimiento_entry = Entry(self.frame)
+        self.curso_label = Label(self.frame, text='Curso:')
+        self.curso_entry = Entry(self.frame)
+
+        # Layout
+        self.nro_reg_label.grid(row=1, column=1, columnspan=2, sticky='EW')
+        self.nro_reg_entry.grid(row=2, column=1, columnspan=2, sticky='EW')
+
+        self.nombre_label.grid(row=3, column=1)
+        self.nombre_entry.grid(row=4, column=1)
+        self.apellido_label.grid(row=3, column=2)
+        self.apellido_entry.grid(row=4, column=2)
+        self.dni_label.grid(row=5, column=1)
+        self.dni_entry.grid(row=6, column=1)
+        self.direccion_label.grid(row=5, column=2)
+        self.direccion_entry.grid(row=6, column=2)
+        self.telefono_label.grid(row=7, column=1)
+        self.telefono_entry.grid(row=8, column=1)
+        self.email_label.grid(row=7, column=2)
+        self.email_entry.grid(row=8, column=2)
+        self.nacimiento_label.grid(row=9, column=1)
+        self.nacimiento_entry.grid(row=10, column=1)
+        self.curso_label.grid(row=9, column=2)
+        self.curso_entry.grid(row=10, column=2)
+
+        self.create_button.grid(row=11, column=2, sticky='EW')
+        self.return_button.grid(row=12, column=2, sticky='EW')
+
+    def alta(self):
+        print('Alta...')
 
     def cancel(self):
         print('Cancelando...')
