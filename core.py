@@ -42,7 +42,7 @@ def swap_view(old_view, new_view):
     elif new_view == 'listado_curso':
         raise NotImplementedError
     elif new_view == 'consulta_alumno':
-        raise NotImplementedError
+        ConsultaAlumno(root)
     elif new_view == 'alta_alumno':
         raise NotImplementedError
     elif new_view == 'baja_alumno':
@@ -244,6 +244,74 @@ class EliminarUsuario:
 
     def remove(self):
         print('Eliminando...')
+
+    def cancel(self):
+        print('Cancelando...')
+        swap_view(self, 'main_menu')
+
+    def terminate(self):
+        self.frame.pack_forget()
+        self.frame.destroy()
+
+
+class ConsultaAlumno:
+    def __init__(self, master):
+        self.frame = Frame(master)
+        self.frame.pack()
+        # Set title
+        master.title('Consultar')
+
+        # Widgets
+        self.nro_reg_label = Label(self.frame, text='Número de Registro:')
+        self.nro_reg_entry = Entry(self.frame)
+        self.create_button = Button(
+            self.frame, text='Buscar', foreground='green', command=self.search)
+        self.return_button = Button(
+            self.frame, text='Cancelar', foreground='red', command=self.cancel)
+        self.nombre_label = Label(self.frame, text='Nombre:')
+        self.nombre_data = Label(self.frame, text='---')
+        self.apellido_label = Label(self.frame, text='Apellido:')
+        self.apellido_data = Label(self.frame, text='---')
+        self.dni_label = Label(self.frame, text='DNI:')
+        self.dni_data = Label(self.frame, text='---')
+        self.direccion_label = Label(self.frame, text='Dirección:')
+        self.direccion_data = Label(self.frame, text='---')
+        self.telefono_label = Label(self.frame, text='Teléfono:')
+        self.telefono_data = Label(self.frame, text='---')
+        self.email_label = Label(self.frame, text='Email')
+        self.email_data = Label(self.frame, text='---')
+        self.nacimiento_label = Label(self.frame, text='Fecha Nacimiento:')
+        self.nacimiento_data = Label(self.frame, text='---')
+        self.curso_label = Label(self.frame, text='Curso:')
+        self.curso_data = Label(self.frame, text='---')
+        
+        # Layout
+        self.nro_reg_label.grid(row=1, column=1, columnspan=2, sticky='EW')
+        self.nro_reg_entry.grid(row=2, column=1, columnspan=2, sticky='EW')
+
+        self.nombre_label.grid(row=3, column=1)
+        self.nombre_data.grid(row=4, column=1)
+        self.apellido_label.grid(row=3, column=2)
+        self.apellido_data.grid(row=4, column=2)
+        self.dni_label.grid(row=5, column=1)
+        self.dni_data.grid(row=6, column=1)
+        self.direccion_label.grid(row=5, column=2)
+        self.direccion_data.grid(row=6, column=2)
+        self.telefono_label.grid(row=7, column=1)
+        self.telefono_data.grid(row=8, column=1)
+        self.email_label.grid(row=7, column=2)
+        self.email_data.grid(row=8, column=2)
+        self.nacimiento_label.grid(row=9, column=1)
+        self.nacimiento_data.grid(row=10, column=1)
+        self.curso_label.grid(row=9, column=2)
+        self.curso_data.grid(row=10, column=2)
+
+        self.create_button.grid(row=11, column=2, sticky='EW')
+        self.return_button.grid(row=12, column=2, sticky='EW')
+
+    def search(self):
+        self.nombre_data.config(text='dummy')
+        print('Buscando...')
 
     def cancel(self):
         print('Cancelando...')

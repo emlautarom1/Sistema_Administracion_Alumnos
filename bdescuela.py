@@ -62,6 +62,8 @@ class BDEscuela ():
     def reg_alumno(self, alumno: Alumno):
         self.reg_usuario('A', alumno.get_username(), alumno.get_password())
         self.get_table('T-alumnos').alta(alumno)
+        # New alumno should init all materias. Alta/Baja?
+        # self.get_table('T-materias').init_materia(alumno.get_nro_reg())
 
     def baja_alumno(self, nro_reg: int):
         username = self.get_table('T-alumnos').consulta(nro_reg).get_username()
