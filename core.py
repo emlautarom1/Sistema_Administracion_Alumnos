@@ -1,19 +1,19 @@
-from tkinter import Tk, Frame, Label, Entry, Button, messagebox, ttk
+from tkinter import Tk, Frame, Label, Entry, Button, messagebox, ttk, StringVar
 
 # Snippets
 # messagebox.showerror("Title", "a Tk MessageBox")
 
 
-def test_pack(frame):
+def simple_pack(frame):
     for c in frame.winfo_children():
-        c.pack()
+        c.pack(fill='both')
 
 
 # DO NOT USE RIGHT NOW
-def set_grid_margin(frame, maxcolumn, maxrow, sz=10):
-    frame.rowconfigure(maxrow, minsize=sz)
+def set_grid_margin(frame, col_count, row_count, sz=10):
+    frame.rowconfigure(row_count+1, minsize=sz)
     frame.rowconfigure(0, minsize=sz)
-    frame.columnconfigure(maxcolumn, minsize=sz)
+    frame.columnconfigure(col_count+1, minsize=sz)
     frame.columnconfigure(0, minsize=sz)
 
 
@@ -59,11 +59,11 @@ def swap_view(old_view, new_view):
     elif new_view == 'baja_materia':
         BajaMateria(root)
     elif new_view == 'modificar_materia':
-        raise NotImplementedError
+        ModificarMateria(root)
     elif new_view == 'backup':
-        raise NotImplementedError
+        Backup(root)
     elif new_view == 'restore':
-        raise NotImplementedError
+        Restore(root)
     else:
         raise RuntimeError
 
@@ -75,7 +75,7 @@ class Login:
         # Set title
         master.title('Login')
         # Widgets
-        self.username_label = Label(self.frame, text='Usuario', padx=5, pady=5)
+        self.username_label = Label(self.frame, text='Usuario')
         self.username_entry = Entry(self.frame)
         self.password_label = Label(
             self.frame, text='Contraseña', padx=5, pady=5)
@@ -378,23 +378,39 @@ class AltaAlumno:
         print('Cancelando...')
         swap_view(self, 'main_menu')
 
-
+# Layout done
 class ModificarAlumno:
     def __init__(self, master):
         self.frame = Frame(master)
         self.frame.pack()
-        # Set title
         master.title('Modificar')
+
+        # Data
+        self.data = {
+            'nro_reg': StringVar(),
+            'nombre': StringVar(),
+            'apellido': StringVar(),
+            'dni': StringVar(),
+            'direccion': StringVar(),
+            'telefono': StringVar(),
+            'email': StringVar(),
+            'nacimiento': StringVar(),
+            'curso': StringVar(),
+            'inasistencias': StringVar(),
+            'concepto': StringVar()
+        }
+
+        # Widgets
         self.nro_reg_label = Label(self.frame, text='Número de Registro:')
         self.nro_reg_entry = Entry(self.frame)
-        self.seach_button = Button(
+        self.search_button = Button(
             self.frame, text='Buscar', foreground='green', command=self.search)
         self.update_button = Button(
             self.frame, text='Modificar', foreground='blue', command=self.modify)
         self.return_button = Button(
             self.frame, text='Cancelar', foreground='red', command=self.cancel)
         self.nombre_label = Label(self.frame, text='Nombre:')
-        self.nombre_entry = Entry(self.frame)
+        self.nombre_entry = Entry(self.frame, textvariable=self.data['nombre'])
         self.apellido_label = Label(self.frame, text='Apellido:')
         self.apellido_entry = Entry(self.frame)
         self.dni_label = Label(self.frame, text='DNI:')
@@ -417,8 +433,11 @@ class ModificarAlumno:
             'Muy Aceptable', 'Aceptable', 'No aceptable']
 
         # Layout
-        self.nro_reg_label.grid(row=1, column=1, columnspan=2, sticky='EW')
-        self.nro_reg_entry.grid(row=2, column=1, columnspan=2, sticky='EW')
+        self.nro_reg_label.grid(row=1, column=1)
+        self.nro_reg_entry.grid(row=1, column=2, sticky='EW')
+        self.search_button.grid(row=2, column=2, sticky='EW')
+
+        self.frame.rowconfigure(3, minsize=10)
 
         self.nombre_label.grid(row=4, column=1)
         self.nombre_entry.grid(row=5, column=1)
@@ -440,24 +459,28 @@ class ModificarAlumno:
         self.inasistencias_entry.grid(row=13, column=1)
         self.concepto_label.grid(row=12, column=2)
         self.concepto_combo.grid(row=13, column=2)
-        self.seach_button.grid(row=3, column=2, sticky='EW')
-        self.update_button.grid(row=14, column=2, sticky='EW')
-        self.return_button.grid(row=15, column=2, sticky='EW')
+
+        self.frame.rowconfigure(14, minsize=50)
+
+        self.return_button.grid(row=15, column=1, sticky='EW')
+        self.update_button.grid(row=15, column=2, sticky='EW')
+
+        set_grid_margin(self.frame, 2, 15)
 
         center(master)
 
     def search(self):
-        self.apellido_entry.config(text='asdasdh')
         print('Buscando...')
+        self.data['nombre'].set('Name')
 
     def modify(self):
-        print('Modify...')
+        print('Modificando...')
 
     def cancel(self):
         print('Cancelando...')
         swap_view(self, 'main_menu')
 
-
+# Layout done
 class BajaAlumno:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -473,10 +496,15 @@ class BajaAlumno:
             self.frame, text='Cancelar', foreground='green', command=self.cancel)
 
         # Layout
-        self.nro_reg_label.grid(row=1, column=1)
-        self.nro_reg_entry.grid(row=1, column=2, sticky='EW')
-        self.delete_button.grid(row=2, column=1, columnspan=2, sticky='SEW')
-        self.return_button.grid(row=3, column=1, columnspan=2, sticky='SEW')
+        self.nro_reg_label.grid(row=1, column=1, sticky='W')
+        self.nro_reg_entry.grid(row=1, column=2)
+
+        self.frame.rowconfigure(2, minsize=50)
+
+        self.return_button.grid(row=3, column=1, sticky='SEW')
+        self.delete_button.grid(row=3, column=2, sticky='SEW')
+
+        set_grid_margin(self.frame, 2, 3)
 
         center(master)
 
@@ -487,7 +515,7 @@ class BajaAlumno:
         print('Cancelando...')
         swap_view(self, 'main_menu')
 
-
+# Layout Done
 class ConsultaMateria:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -515,8 +543,26 @@ class ConsultaMateria:
             self.frame, text='Cancelar', foreground='red', command=self.cancel)
 
         # Layout
-        for c in self.frame.winfo_children():
-            c.pack(fill='both')
+        self.nro_reg_label.grid(row=1, column=1, sticky='W')
+        self.nro_reg_entry.grid(row=1, column=2)
+        self.nmbr_materia_label.grid(row=2, column=1, sticky='W')
+        self.nmbr_materia_entry.grid(row=2, column=2)
+
+        self.frame.rowconfigure(3, minsize=5)
+
+        self.nota1_label.grid(row=4, column=1, columnspan=2)
+        self.nota1_data.grid(row=5, column=1, columnspan=2)
+        self.nota2_label.grid(row=6, column=1, columnspan=2)
+        self.nota2_data.grid(row=7, column=1, columnspan=2)
+        self.nota3_label.grid(row=8, column=1, columnspan=2)
+        self.nota3_data.grid(row=9, column=1, columnspan=2)
+
+        self.frame.rowconfigure(10, minsize=50)
+
+        self.return_button.grid(row=11, column=1, sticky='EW')
+        self.search_button.grid(row=11, column=2, sticky='EW')
+
+        set_grid_margin(self.frame, 2, 11)
 
         center(master)
 
@@ -527,7 +573,7 @@ class ConsultaMateria:
         print('Cancelando...')
         swap_view(self, 'main_menu')
 
-
+# Layout done
 class AltaMateria:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -555,8 +601,26 @@ class AltaMateria:
             self.frame, text='Cancelar', foreground='red', command=self.cancel)
 
         # Layout
-        for c in self.frame.winfo_children():
-            c.pack(fill='both')
+        self.nro_reg_label.grid(row=1, column=1, sticky='W')
+        self.nro_reg_entry.grid(row=1, column=2)
+        self.nmbr_materia_label.grid(row=2, column=1, sticky='W')
+        self.nmbr_materia_entry.grid(row=2, column=2)
+
+        self.frame.rowconfigure(3, minsize=5)
+
+        self.nota1_label.grid(row=4, column=1, columnspan=2)
+        self.nota1_entry.grid(row=5, column=1, columnspan=2)
+        self.nota2_label.grid(row=6, column=1, columnspan=2)
+        self.nota2_entry.grid(row=7, column=1, columnspan=2)
+        self.nota3_label.grid(row=8, column=1, columnspan=2)
+        self.nota3_entry.grid(row=9, column=1, columnspan=2)
+
+        self.frame.rowconfigure(10, minsize=50)
+
+        self.return_button.grid(row=11, column=1, sticky='EW')
+        self.alta_button.grid(row=11, column=2, sticky='EW')
+
+        set_grid_margin(self.frame, 2, 11)
 
         center(master)
 
@@ -567,35 +631,184 @@ class AltaMateria:
         print('Cancelando...')
         swap_view(self, 'main_menu')
 
+# Layout done
+class ModificarMateria:
+    def __init__(self, master):
+        self.frame = Frame(master)
+        self.frame.pack()
+        # Set title
+        master.title('Modificar')
+        # Widgets
+        self.nro_reg_label = Label(self.frame, text='Número de Registro:')
+        self.nro_reg_entry = Entry(self.frame)
+        self.nmbr_materia_label = Label(self.frame, text='Nombre de Materia:')
+        self.nmbr_materia_entry = Entry(self.frame)
 
+        self.search_button = Button(
+            self.frame, text='Buscar', foreground='green', command=self.search)
+
+        self.nota1_label = Label(self.frame, text='Primer Trimestre:')
+        self.nota1_entry = Entry(self.frame)
+
+        self.nota2_label = Label(self.frame, text='Segundo Trimestre:')
+        self.nota2_entry = Entry(self.frame)
+
+        self.nota3_label = Label(self.frame, text='Tercer Trimestre:')
+        self.nota3_entry = Entry(self.frame)
+
+        self.modify_button = Button(
+            self.frame, text='Modificar', foreground='blue',
+            command=self.modify)
+        self.return_button = Button(
+            self.frame, text='Cancelar', foreground='red', command=self.cancel)
+
+        # Layout
+        self.nro_reg_label.grid(row=1, column=1, sticky='W')
+        self.nro_reg_entry.grid(row=1, column=2)
+        self.nmbr_materia_label.grid(row=2, column=1, sticky='W')
+        self.nmbr_materia_entry.grid(row=2, column=2)
+        self.search_button.grid(row=3, column=2, sticky='EW')
+
+        self.frame.rowconfigure(4, minsize=5)
+
+        self.nota1_label.grid(row=5, column=1, columnspan=2)
+        self.nota1_entry.grid(row=6, column=1, columnspan=2)
+        self.nota2_label.grid(row=7, column=1, columnspan=2)
+        self.nota2_entry.grid(row=8, column=1, columnspan=2)
+        self.nota3_label.grid(row=9, column=1, columnspan=2)
+        self.nota3_entry.grid(row=10, column=1, columnspan=2)
+
+        self.frame.rowconfigure(11, minsize=50)
+
+        self.return_button.grid(row=12, column=1, sticky='EW')
+        self.modify_button.grid(row=12, column=2, sticky='EW')
+
+        set_grid_margin(self.frame, 2, 12)
+
+        center(master)
+
+    def search(self):
+        print('Buscando materia...')
+
+    def modify(self):
+        print('Modificando materia...')
+
+    def cancel(self):
+        print('Cancelando...')
+        swap_view(self, 'main_menu')
+
+# Layout Done
 class BajaMateria:
     def __init__(self, master):
         self.frame = Frame(master)
         self.frame.pack()
         # Set title
-        master.title('Consulta')
+        master.title('Baja')
         # Widgets
         self.nro_reg_label = Label(self.frame, text='Número de Registro:')
         self.nro_reg_entry = Entry(self.frame)
         self.nmbr_materia_label = Label(self.frame, text='Nombre de Materia:')
         self.nmbr_materia_entry = Entry(self.frame)
         self.delete_button = Button(
-            self.frame, text='Eliminar', foreground='red', command=self.delete)
+            self.frame, text='Dar de Baja', foreground='red', command=self.delete)
         self.return_button = Button(
             self.frame, text='Cancelar', foreground='green', command=self.cancel)
 
         # Layout
-        self.nro_reg_label.grid(row=1, column=1)
-        self.nro_reg_entry.grid(row=1, column=2, sticky='EW')
-        self.nmbr_materia_label.grid(row=2, column=1)
-        self.nmbr_materia_entry.grid(row=2, column=2, sticky='EW')
-        self.delete_button.grid(row=3, column=1, columnspan=2, sticky='SEW')
-        self.return_button.grid(row=4, column=1, columnspan=2, sticky='SEW')
+        self.nro_reg_label.grid(row=1, column=1, sticky='W')
+        self.nro_reg_entry.grid(row=1, column=2)
+        self.nmbr_materia_label.grid(row=2, column=1, sticky='W')
+        self.nmbr_materia_entry.grid(row=2, column=2)
+
+        self.frame.rowconfigure(3, minsize=50)
+
+        self.delete_button.grid(row=4, column=2, sticky='EW')
+        self.return_button.grid(row=4, column=1, sticky='EW')
+
+        set_grid_margin(self.frame, 2, 4)
 
         center(master)
 
     def delete(self):
         print('Eliminando...')
+
+    def cancel(self):
+        print('Cancelando...')
+        swap_view(self, 'main_menu')
+
+# Layout done
+class Backup:
+    def __init__(self, master):
+        self.frame = Frame(master)
+        self.frame.pack()
+        # Set title
+        master.title('Almacenar en Disco')
+        # Widgets
+        self.filename_label = Label(self.frame, text='Nombre:')
+        self.filename_entry = Entry(self.frame)
+        self.directory_label = Label(self.frame, text='Directorio:')
+        self.directory_entry = Entry(self.frame)
+        self.save_button = Button(
+            self.frame, text='Guardar', command=self.save)
+        self.return_button = Button(
+            self.frame, text='Cancelar', foreground='red', command=self.cancel)
+
+        # Layout
+        self.filename_label.grid(row=1, column=1, sticky='W')
+        self.filename_entry.grid(row=1, column=2)
+        self.directory_label.grid(row=2, column=1, sticky='W')
+        self.directory_entry.grid(row=2, column=2)
+
+        self.frame.rowconfigure(3, minsize=50)
+
+        self.return_button.grid(row=4, column=1, sticky='EW')
+        self.save_button.grid(row=4, column=2, sticky='EW')
+
+        set_grid_margin(self.frame, 2, 4)
+        # Center
+        center(master)
+
+    def save(self):
+        print('Saving...')
+
+    def cancel(self):
+        print('Cancelando...')
+        swap_view(self, 'main_menu')
+
+# Layout done
+class Restore:
+    def __init__(self, master):
+        self.frame = Frame(master)
+        self.frame.pack()
+        # Set title
+        master.title('Inicializar Sesion')
+        # Widgets
+        self.filename_label = Label(self.frame, text='Nombre:')
+        self.filename_entry = Entry(self.frame)
+        self.directory_label = Label(self.frame, text='Directorio:')
+        self.directory_entry = Entry(self.frame)
+        self.save_button = Button(
+            self.frame, text='Cargar', command=self.save)
+        self.return_button = Button(
+            self.frame, text='Cancelar', foreground='red', command=self.cancel)
+
+        # Layout
+        self.filename_label.grid(row=1, column=1, sticky='W')
+        self.filename_entry.grid(row=1, column=2)
+        self.directory_label.grid(row=2, column=1, sticky='W')
+        self.directory_entry.grid(row=2, column=2)
+
+        self.frame.rowconfigure(3, minsize=50)
+
+        self.return_button.grid(row=4, column=1, sticky='EW')
+        self.save_button.grid(row=4, column=2, sticky='EW')
+
+        set_grid_margin(self.frame, 2, 4)
+        # Center
+        center(master)
+
+    def save(self):
+        print('Saving...')
 
     def cancel(self):
         print('Cancelando...')
