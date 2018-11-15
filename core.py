@@ -23,7 +23,8 @@ def center(n):
 
 
 def swap_view(old_view, new_view):
-    old_view.terminate()
+    old_view.frame.pack_forget()
+    old_view.frame.destroy()
 
     if new_view == 'main_menu':
         MainMenu(root)
@@ -54,9 +55,9 @@ def swap_view(old_view, new_view):
     elif new_view == 'consulta_materia':
         ConsultaMateria(root)
     elif new_view == 'alta_materia':
-        raise NotImplementedError
+        AltaMateria(root)
     elif new_view == 'baja_materia':
-        raise NotImplementedError
+        BajaMateria(root)
     elif new_view == 'modificar_materia':
         raise NotImplementedError
     elif new_view == 'backup':
@@ -99,10 +100,6 @@ class Login:
         # print(self.password_entry.get())
         print('Loged in...')
         swap_view(self, 'main_menu')
-
-    def terminate(self):
-        self.frame.pack_forget()
-        self.frame.destroy()
 
 
 class MainMenu:
@@ -171,10 +168,6 @@ class MainMenu:
         # Center
         center(master)
 
-    def terminate(self):
-        self.frame.pack_forget()
-        self.frame.destroy()
-
 
 class RegistrarUsuario:
     def __init__(self, master):
@@ -211,10 +204,6 @@ class RegistrarUsuario:
         print('Cancelando...')
         swap_view(self, 'main_menu')
 
-    def terminate(self):
-        self.frame.pack_forget()
-        self.frame.destroy()
-
 
 class EliminarUsuario:
     def __init__(self, master):
@@ -230,7 +219,7 @@ class EliminarUsuario:
         self.username_label = Label(self.frame, text='Nombre de Usuario')
         self.username_entry = Entry(self.frame)
         self.delete_button = Button(
-            self.frame, text='Eliminar', foreground='red', command=self.remove)
+            self.frame, text='Eliminar', foreground='red', command=self.delete)
         self.return_button = Button(
             self.frame, text='Cancelar', foreground='green', command=self.cancel)
 
@@ -244,16 +233,12 @@ class EliminarUsuario:
 
         center(master)
 
-    def remove(self):
+    def delete(self):
         print('Eliminando...')
 
     def cancel(self):
         print('Cancelando...')
         swap_view(self, 'main_menu')
-
-    def terminate(self):
-        self.frame.pack_forget()
-        self.frame.destroy()
 
 
 class ConsultaAlumno:
@@ -321,10 +306,6 @@ class ConsultaAlumno:
         print('Cancelando...')
         swap_view(self, 'main_menu')
 
-    def terminate(self):
-        self.frame.pack_forget()
-        self.frame.destroy()
-
 
 class AltaAlumno:
     def __init__(self, master):
@@ -334,8 +315,8 @@ class AltaAlumno:
         master.title('Alta')
         self.nro_reg_label = Label(self.frame, text='Número de Registro:')
         self.nro_reg_entry = Entry(self.frame)
-        self.create_button = Button(
-            self.frame, text='Cargar', foreground='green', command=self.alta)
+        self.alta_button = Button(
+            self.frame, text='Alta', foreground='green', command=self.alta)
         self.return_button = Button(
             self.frame, text='Cancelar', foreground='red', command=self.cancel)
 
@@ -385,7 +366,7 @@ class AltaAlumno:
         self.curso_label.grid(row=11, column=2)
         self.curso_entry.grid(row=12, column=2)
 
-        self.create_button.grid(row=13, column=2, sticky='EW')
+        self.alta_button.grid(row=13, column=2, sticky='EW')
         self.return_button.grid(row=14, column=2, sticky='EW')
 
         center(master)
@@ -396,10 +377,6 @@ class AltaAlumno:
     def cancel(self):
         print('Cancelando...')
         swap_view(self, 'main_menu')
-
-    def terminate(self):
-        self.frame.pack_forget()
-        self.frame.destroy()
 
 
 class ModificarAlumno:
@@ -480,10 +457,6 @@ class ModificarAlumno:
         print('Cancelando...')
         swap_view(self, 'main_menu')
 
-    def terminate(self):
-        self.frame.pack_forget()
-        self.frame.destroy()
-
 
 class BajaAlumno:
     def __init__(self, master):
@@ -513,10 +486,6 @@ class BajaAlumno:
     def cancel(self):
         print('Cancelando...')
         swap_view(self, 'main_menu')
-
-    def terminate(self):
-        self.frame.pack_forget()
-        self.frame.destroy()
 
 
 class ConsultaMateria:
@@ -558,9 +527,79 @@ class ConsultaMateria:
         print('Cancelando...')
         swap_view(self, 'main_menu')
 
-    def terminate(self):
-        self.frame.pack_forget()
-        self.frame.destroy()
+
+class AltaMateria:
+    def __init__(self, master):
+        self.frame = Frame(master)
+        self.frame.pack()
+        # Set title
+        master.title('Alta')
+        # Widgets
+        self.nro_reg_label = Label(self.frame, text='Número de Registro:')
+        self.nro_reg_entry = Entry(self.frame)
+        self.nmbr_materia_label = Label(self.frame, text='Nombre de Materia:')
+        self.nmbr_materia_entry = Entry(self.frame)
+
+        self.nota1_label = Label(self.frame, text='Primer Trimestre:')
+        self.nota1_entry = Entry(self.frame)
+
+        self.nota2_label = Label(self.frame, text='Segundo Trimestre:')
+        self.nota2_entry = Entry(self.frame)
+
+        self.nota3_label = Label(self.frame, text='Tercer Trimestre:')
+        self.nota3_entry = Entry(self.frame)
+
+        self.alta_button = Button(
+            self.frame, text='Alta', foreground='green', command=self.alta)
+        self.return_button = Button(
+            self.frame, text='Cancelar', foreground='red', command=self.cancel)
+
+        # Layout
+        for c in self.frame.winfo_children():
+            c.pack(fill='both')
+
+        center(master)
+
+    def alta(self):
+        print('Cargando materia...')
+
+    def cancel(self):
+        print('Cancelando...')
+        swap_view(self, 'main_menu')
+
+
+class BajaMateria:
+    def __init__(self, master):
+        self.frame = Frame(master)
+        self.frame.pack()
+        # Set title
+        master.title('Consulta')
+        # Widgets
+        self.nro_reg_label = Label(self.frame, text='Número de Registro:')
+        self.nro_reg_entry = Entry(self.frame)
+        self.nmbr_materia_label = Label(self.frame, text='Nombre de Materia:')
+        self.nmbr_materia_entry = Entry(self.frame)
+        self.delete_button = Button(
+            self.frame, text='Eliminar', foreground='red', command=self.delete)
+        self.return_button = Button(
+            self.frame, text='Cancelar', foreground='green', command=self.cancel)
+
+        # Layout
+        self.nro_reg_label.grid(row=1, column=1)
+        self.nro_reg_entry.grid(row=1, column=2, sticky='EW')
+        self.nmbr_materia_label.grid(row=2, column=1)
+        self.nmbr_materia_entry.grid(row=2, column=2, sticky='EW')
+        self.delete_button.grid(row=3, column=1, columnspan=2, sticky='SEW')
+        self.return_button.grid(row=4, column=1, columnspan=2, sticky='SEW')
+
+        center(master)
+
+    def delete(self):
+        print('Eliminando...')
+
+    def cancel(self):
+        print('Cancelando...')
+        swap_view(self, 'main_menu')
 
 
 root = Tk()
