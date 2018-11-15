@@ -30,9 +30,9 @@ class BDEscuela ():
                     # Set user privileges
                     return
                 else:
-                    raise ValueError('Incorrect password')
+                    raise ValueError('Contraseña incorrecta.')
         else:
-            raise KeyError('User not in databse')
+            raise KeyError('El usuario no está registrado.')
 
     def elim_usuario(self, privilege: str, username: str):
         if self.is_privileged():

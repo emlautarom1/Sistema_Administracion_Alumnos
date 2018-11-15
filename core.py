@@ -64,6 +64,7 @@ def swap_view(old_view, new_view):
         raise RuntimeError
 
 # Layout done
+# Logic done
 class Login:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -75,7 +76,8 @@ class Login:
         self.username_entry = Entry(self.frame)
         self.privilege_label = Label(self.frame, text='Privielgios:')
         self.privilege_combo = ttk.Combobox(self.frame, state='readonly')
-        self.privilege_combo['values'] = ['Programador', 'Docente', 'Alumno']
+        self.privilege_combo['values'] = ['Alumno', 'Programador', 'Docente']
+        self.privilege_combo.current(0)
         self.password_label = Label(self.frame, text='Contraseña:')
         self.password_entry = Entry(self.frame, show='*')
         self.login_button = Button(
@@ -102,9 +104,15 @@ class Login:
         center(master)
 
     def login(self):
-        # print(self.password_entry.get())
-        print('Loged in...')
-        swap_view(self, 'main_menu')
+        try:
+            # bd_escuela.inic_esc(self.privilege_combo.get()[0],
+            #                     self.username_entry.get(),
+            #                     self.password_entry.get()
+            # )
+            print('Logged in...')
+            swap_view(self, 'main_menu')
+        except Exception as e:
+            messagebox.showerror('Hubo un error...', "{0}".format(str(e)))
 
 # Layout done
 class MainMenu:
@@ -948,7 +956,7 @@ class Restore:
 # Start main window
 root = Tk()
 # Start Database
-
+bd_escuela = BDEscuela()
 # Set login
 Login(root)
 # Start
