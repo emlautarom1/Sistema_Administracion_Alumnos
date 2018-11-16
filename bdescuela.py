@@ -144,7 +144,7 @@ class BDEscuela ():
                             sort_keys=True,
                             indent=4)
         try:
-            f = open(folder + name, 'w')
+            f = open(folder + name + '.json', 'w')
             f.write(dumped)
             f.close()
         except OSError:
@@ -153,7 +153,7 @@ class BDEscuela ():
     def carga_bd(self, name: str, folder: str):
 
         try:
-            f = open(folder + name, 'r')
+            f = open(folder + name + '.json', 'r')
             data = f.read()
             f.close()
         except OSError:

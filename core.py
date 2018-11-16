@@ -1020,6 +1020,8 @@ class BajaMateria:
         swap_view(self, 'main_menu')
 
 # Layout done
+# Logic done
+# Tested
 class Backup:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -1052,13 +1054,21 @@ class Backup:
         center(master)
 
     def save(self):
-        print('Saving...')
-
+        try:
+            bd_escuela.backup(
+                self.filename_entry.get(),
+                self.directory_entry.get()
+            )
+            messagebox.showinfo('Exito', 'Se han almacenado los datos en el disco.')
+        except Exception as e:
+            messagebox.showerror('Hubo un error...', '{0}'.format(str(e)))
+        
     def cancel(self):
-        print('Cancelando...')
         swap_view(self, 'main_menu')
 
 # Layout done
+# Logic done
+# Tested
 class Restore:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -1091,10 +1101,16 @@ class Restore:
         center(master)
 
     def save(self):
-        print('Saving...')
+        try:
+            bd_escuela.carga_bd(
+                self.filename_entry.get(),
+                self.directory_entry.get()
+            )
+            messagebox.showinfo('Exito', 'Se han cargados los datos desde el disco.')
+        except Exception as e:
+            messagebox.showerror('Hubo un error...', '{0}'.format(str(e)))
 
     def cancel(self):
-        print('Cancelando...')
         swap_view(self, 'main_menu')
 
 
