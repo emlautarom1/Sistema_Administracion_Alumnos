@@ -177,6 +177,10 @@ class MainMenu:
         self.restore_button = Button(
             self.system_frame, text='Inicializar Sesion', command=lambda: swap_view(self, 'restore'))
 
+        # Log-out
+        self.logout_button = Button(
+            self.frame, text='Salir', foreground='red', command=lambda: swap_view(self, 'login'))
+
         # Layout in Frames:
 
         # System
@@ -220,14 +224,16 @@ class MainMenu:
         self.system_frame.pack(side='left', padx=10, pady=10, fill='y')        
         self.alumno_frame.pack(side='left', padx=10, pady=10, fill='y')
         self.materia_frame.pack(side='left', padx=10, pady=10, fill='y')
+        self.logout_button.pack(side='bottom', padx=10, pady=10)
 
         # Disable buttons
         if not bd_escuela.is_privileged():
             # Disable user management
             self.registrar_button.config(state='disabled')
-            # Disable sesions
             self.eliminar_button.config(state='disabled')
+            # Disable sesions
             self.backup_button.config(state='disabled')
+            self.restore_button.config(state='disabled')
             # Disable CRUD: Alumno
             self.alta_alumno_button.config(state='disabled')
             self.baja_alumno_button.config(state='disabled')
