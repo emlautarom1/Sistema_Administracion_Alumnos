@@ -128,6 +128,15 @@ class BDEscuela ():
                 'No existe un alumno con el número de registro {0}'.format(nro_reg))
         return self.get_table('T-materias').consulta(nro_reg, nombre)
 
+    def get_materias_alumno(self, nro_reg: int):
+        try:
+            # Checks for valid nro_reg
+            self.cons_alumno(nro_reg)
+        except:
+            raise KeyError(
+                'No existe un alumno con el número de registro {0}'.format(nro_reg))
+        return self.get_table('T-materias').get_materias_alumno(nro_reg)
+
     def is_privileged(self):
         return self.privilege == 'P' or self.privilege == 'D'
 

@@ -57,5 +57,5 @@ class TMaterias:
             else:
                 raise KeyError('La materia no se encuentra.')
 
-    def get_materias_de_alumno(self, nro_reg: int):
+    def get_materias_alumno(self, nro_reg: int):
         return list(filter(lambda m: m.get_nro_reg() == nro_reg, self.listado))

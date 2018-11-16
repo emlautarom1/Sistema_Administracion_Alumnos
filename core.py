@@ -33,8 +33,8 @@ def swap_view(old_view, new_view):
         EliminarUsuario(root)
     elif new_view == 'tabla_alumno':
         TablaAlumno(root)
-    elif new_view == 'legajo_dni':
-        raise NotImplementedError
+    elif new_view == 'legajo_registro':
+        LegajoRegistro(root)
     elif new_view == 'listado_inas':
         raise NotImplementedError
     elif new_view == 'listado_curso':
@@ -143,7 +143,7 @@ class MainMenu:
         self.tabla_alumno_button = Button(
             self.alumno_frame, text='Tabla de Alumnos', command=lambda: swap_view(self, 'tabla_alumno'))
         self.legajo_alumno_dni_button = Button(
-            self.alumno_frame, text='Buscar legajo por DNI', command=lambda: swap_view(self, 'legajo_dni'))
+            self.alumno_frame, text='Buscar legajo por Registro', command=lambda: swap_view(self, 'legajo_registro'))
         self.listado_inasistencias_button = Button(
             self.alumno_frame, text='Listado por Inasistencias', command=lambda: swap_view(self, 'listado_inas'))
         self.listado_curso_button = Button(
@@ -362,21 +362,26 @@ class TablaAlumno:
         self.return_button = Button(
             self.frame, text='Volver', foreground='blue', command=self.cancel)
 
-        for al in bd_escuela.get_table('T-alumnos').get_values():
-            self.table.insert_row(
-                [
-                    al.get_nro_reg(),
-                    al.get_username(),
-                    al.get_nombre(),
-                    al.get_apellido(),
-                    al.get_dni(),
-                    al.get_direccion(),
-                    al.get_curso(),
-                    al.get_telefono(),
-                    al.get_nacimiento(),
-                    al.get_email()
-                ]
-            )
+        data = bd_escuela.get_table('T-alumnos').get_values()
+        if len(data) == 0:
+                messagebox.showerror('Hubo un error...', 'El alumno no tiene materias asignadas.')
+                swap_view(self, 'main_menu')
+        else:
+            for al in data:
+                self.table.insert_row(
+                    [
+                        al.get_nro_reg(),
+                        al.get_username(),
+                        al.get_nombre(),
+                        al.get_apellido(),
+                        al.get_dni(),
+                        al.get_direccion(),
+                        al.get_curso(),
+                        al.get_telefono(),
+                        al.get_nacimiento(),
+                        al.get_email()
+                    ]
+                )
 
         # Layout
         self.table.grid(row=1, column=1, sticky='EW')
@@ -386,6 +391,86 @@ class TablaAlumno:
         set_grid_margin(self.frame, 1, 3)
 
         center(master)
+
+    def cancel(self):
+        swap_view(self, 'main_menu')
+
+# Layout done
+# Logic done
+# Tested
+class LegajoRegistro:
+    def __init__(self, master):
+        self.frame = Frame(master)
+        self.frame.pack()
+        # Set title
+        master.title('Legajo por Registro')
+        
+        # Topbar frame
+        self.top_frame = Frame(self.frame)
+        
+        # Widgets
+        self.nro_reg_label = Label(self.top_frame, text='Número de Registro:')
+        self.nro_reg_entry = Entry(self.top_frame)
+        
+        self.search_button = Button(
+            self.top_frame, text='Buscar', foreground='green', command=self.search)
+
+        self.table = Table(
+            self.frame, 
+            [
+                'Materia',
+                '1 Cuatrimestre',
+                '2 Cuatrimestre',
+                '3 Cuatrimestre'
+            ],
+        )
+
+        self.return_button = Button(
+            self.frame, text='Volver', foreground='blue', command=self.cancel)
+
+        # Layout
+        # Topbar
+        self.nro_reg_label.grid(row=1, column=1, sticky= 'W')
+        self.nro_reg_entry.grid(row=1, column=2)
+        self.top_frame.columnconfigure(3, minsize=20)
+        self.search_button.grid(row=1, column=4)
+
+        # Main Frame
+        self.top_frame.grid(row=1, column=1, sticky='W')
+        self.frame.rowconfigure(2, minsize=20)
+        self.table.grid(row=3, column=1, sticky='EW')
+        self.frame.rowconfigure(4, minsize=50)
+        self.return_button.grid(row=5, column=1, sticky='E')
+
+        set_grid_margin(self.frame, 1, 5)
+
+        center(master)
+
+    def search(self):
+
+        try:
+            data = bd_escuela.get_materias_alumno(
+                int(self.nro_reg_entry.get())
+            )
+
+            if len(data) == 0:
+                messagebox.showerror('Hubo un error...', 'El alumno no tiene materias asignadas.')
+                swap_view(self, 'main_menu')
+            else:
+                # Disable multiple search
+                self.search_button.config(state='disabled')
+                for m in data:
+                    self.table.insert_row(
+                        [
+                            m.get_nombre(),
+                            m.get_nota_trimestre(0),
+                            m.get_nota_trimestre(1),
+                            m.get_nota_trimestre(2)
+                        ]
+                    )
+
+        except Exception as e:
+            messagebox.showerror('Hubo un error...', '{0}'.format(str(e)))
 
     def cancel(self):
         swap_view(self, 'main_menu')
