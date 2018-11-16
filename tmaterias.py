@@ -37,8 +37,6 @@ class TMaterias:
         for val in self.listado:
             if val.get_nro_reg() == nro_reg:
                 to_remove.append(val)
-        if len(to_remove) == 0:
-            raise KeyError('No materias with designated nro_reg')
         for val in to_remove:
             self.listado.remove(val)
 

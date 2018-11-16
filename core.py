@@ -699,6 +699,8 @@ class ModificarAlumno:
         swap_view(self, 'main_menu')
 
 # Layout done
+# Logic done
+# Tested
 class BajaAlumno:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -727,10 +729,13 @@ class BajaAlumno:
         center(master)
 
     def delete(self):
-        print('Eliminando...')
+        try:
+            bd_escuela.baja_alumno(int(self.nro_reg_entry.get()))
+            messagebox.showinfo('Exito', 'Se ha dado de baja el alumno.')
+        except Exception as e:
+            messagebox.showerror('Hubo un error...', '{0}'.format(str(e)))
 
     def cancel(self):
-        print('Cancelando...')
         swap_view(self, 'main_menu')
 
 # Layout Done
