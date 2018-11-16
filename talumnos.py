@@ -59,6 +59,9 @@ class TAlumnos:
             raise KeyError(
                 'No hay alumno con número de registro {0}'.format(nro_reg))
 
+    def get_values(self):
+        return self.listado.values()
+
     def listado_inas(self):
         # Returns list of Alumnos
         return list(filter(lambda alumno: alumno.inasistencias > 15, self.listado.values()))

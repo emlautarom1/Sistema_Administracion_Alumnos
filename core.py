@@ -1,4 +1,5 @@
 from tkinter import Tk, Frame, Label, Entry, Button, messagebox, ttk, StringVar
+from tablescroll import Table
 from bdescuela import BDEscuela
 from alumno import Alumno
 from materia import Materia
@@ -31,7 +32,7 @@ def swap_view(old_view, new_view):
     elif new_view == 'eliminar_usuario':
         EliminarUsuario(root)
     elif new_view == 'tabla_alumno':
-        raise NotImplementedError
+        TablaAlumno(root)
     elif new_view == 'legajo_dni':
         raise NotImplementedError
     elif new_view == 'listado_inas':
@@ -330,6 +331,65 @@ class EliminarUsuario:
 
     def cancel(self):
         swap_view(self, 'main_menu')
+
+# Layout done
+# Logic done
+# Tested
+class TablaAlumno:
+    def __init__(self, master):
+        self.frame = Frame(master)
+        self.frame.pack()
+        # Set title
+        master.title('Tabla de Alumnos')
+
+        # Widgets
+
+        self.table = Table(
+            self.frame, 
+            [
+                'Nro. Registro',
+                'Usuario',
+                'Nombre',
+                'Apellido',
+                'DNI',
+                'Dirección',
+                'Curso',
+                'Teléfono',
+                'Fecha de Nacimiento',
+                'Email'
+            ]
+        )
+        self.return_button = Button(
+            self.frame, text='Volver', foreground='blue', command=self.cancel)
+
+        for al in bd_escuela.get_table('T-alumnos').get_values():
+            self.table.insert_row(
+                [
+                    al.get_nro_reg(),
+                    al.get_username(),
+                    al.get_nombre(),
+                    al.get_apellido(),
+                    al.get_dni(),
+                    al.get_direccion(),
+                    al.get_curso(),
+                    al.get_telefono(),
+                    al.get_nacimiento(),
+                    al.get_email()
+                ]
+            )
+
+        # Layout
+        self.table.grid(row=1, column=1, sticky='EW')
+        self.frame.rowconfigure(2, minsize=50)
+        self.return_button.grid(row=3, column=1, sticky='E')
+
+        set_grid_margin(self.frame, 1, 3)
+
+        center(master)
+
+    def cancel(self):
+        swap_view(self, 'main_menu')
+
 
 # Layout done
 # Logic done
