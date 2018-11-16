@@ -65,6 +65,7 @@ def swap_view(old_view, new_view):
 
 # Layout done
 # Logic done
+# Tested
 class Login:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -109,12 +110,12 @@ class Login:
             #                     self.username_entry.get(),
             #                     self.password_entry.get()
             # )
-            print('Logged in...')
             swap_view(self, 'main_menu')
         except Exception as e:
             messagebox.showerror('Hubo un error...', "{0}".format(str(e)))
 
 # Layout done
+# Logic done
 class MainMenu:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -223,10 +224,11 @@ class MainMenu:
         self.alumno_frame.pack(side='left', padx=10, pady=10, fill='y')
         self.materia_frame.pack(side='left', padx=10, pady=10, fill='y')
 
-
         center(master)
 
 # Layout done
+# Logic done
+# Tested
 class RegistrarUsuario:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -238,8 +240,11 @@ class RegistrarUsuario:
         self.privilege_label = Label(self.frame, text='Privilegio:')
         self.privilege_combo = ttk.Combobox(self.frame, state='readonly')
         self.privilege_combo['values'] = ['Programador', 'Docente']
+        self.privilege_combo.current(0)
         self.username_label = Label(self.frame, text='Usuario:')
         self.username_entry = Entry(self.frame)
+        self.password_label = Label(self.frame, text='Contraseña:')
+        self.password_entry = Entry(self.frame, show='*')
         self.create_button = Button(
             self.frame, text='Registrar', foreground='green', command=self.register)
         self.return_button = Button(
@@ -248,26 +253,37 @@ class RegistrarUsuario:
         # Layout
         self.username_label.grid(row=1, column=1)
         self.username_entry.grid(row=1, column=2, sticky='EW')
-        self.privilege_label.grid(row=2, column=1)
-        self.privilege_combo.grid(row=2, column=2)
+        self.password_label.grid(row=2, column=1)
+        self.password_entry.grid(row=2, column=2, sticky='EW')
+        self.privilege_label.grid(row=3, column=1)
+        self.privilege_combo.grid(row=3, column=2, sticky='EW')
 
-        self.frame.rowconfigure(3, minsize=50)
+        self.frame.rowconfigure(4, minsize=50)
 
-        self.return_button.grid(row=4, column=1, sticky='EW')
-        self.create_button.grid(row=4, column=2, sticky='EW')
+        self.return_button.grid(row=5, column=1, sticky='EW')
+        self.create_button.grid(row=5, column=2, sticky='EW')
 
-        set_grid_margin(self.frame, 2, 4)
+        set_grid_margin(self.frame, 2, 5)
 
         center(master)
 
     def register(self):
-        print('Registrando...')
-
+        try:
+            bd_escuela.reg_usuario(
+                self.privilege_combo.get()[0],
+                self.username_entry.get(),
+                self.password_entry.get()
+            )
+            messagebox.showinfo('Exito', 'Se ha registrado el usuario.')
+        except Exception as e:
+            messagebox.showerror('Hubo un error...', "{0}".format(str(e)))
+        
     def cancel(self):
-        print('Cancelando...')
         swap_view(self, 'main_menu')
 
 # Layout done
+# Logic done
+# Tested
 class EliminarUsuario:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -279,6 +295,7 @@ class EliminarUsuario:
         self.privilege_label = Label(self.frame, text='Privilegio:')
         self.privilege_combo = ttk.Combobox(self.frame, state='readonly')
         self.privilege_combo['values'] = ['Programador', 'Docente']
+        self.privilege_combo.current(0)
         self.username_label = Label(self.frame, text='Usuario:')
         self.username_entry = Entry(self.frame)
         self.delete_button = Button(
@@ -302,18 +319,26 @@ class EliminarUsuario:
         center(master)
 
     def delete(self):
-        print('Eliminando...')
+        try:
+            bd_escuela.elim_usuario(
+                self.privilege_combo.get()[0],
+                self.username_entry.get()
+            )
+            messagebox.showinfo('Exito', 'Se ha eliminado el usuario.')
+        except Exception as e:
+            messagebox.showerror('Hubo un error...', '{0}'.format(str(e)))
 
     def cancel(self):
-        print('Cancelando...')
         swap_view(self, 'main_menu')
 
 # Layout done
+# Logic done
+# Tested
 class ConsultaAlumno:
     def __init__(self, master):
         self.frame = Frame(master)
         self.frame.pack()
-        master.title('Modificar')
+        master.title('Consulta')
 
         # Data
         self.data = {
@@ -343,29 +368,29 @@ class ConsultaAlumno:
         self.nombre_label = Label(self.frame, text='Nombre:')
         self.nombre_data = Entry(self.frame, textvariable=self.data['nombre'])
         self.apellido_label = Label(self.frame, text='Apellido:')
-        self.apellido_data = Entry(self.frame)
+        self.apellido_data = Entry(self.frame, textvariable=self.data['apellido'])
         self.dni_label = Label(self.frame, text='DNI:')
-        self.dni_data = Entry(self.frame)
+        self.dni_data = Entry(self.frame, textvariable=self.data['dni'])
         self.direccion_label = Label(self.frame, text='Dirección:')
-        self.direccion_data = Entry(self.frame)
+        self.direccion_data = Entry(self.frame, textvariable=self.data['direccion'])
         self.telefono_label = Label(self.frame, text='Teléfono:')
-        self.telefono_data = Entry(self.frame)
+        self.telefono_data = Entry(self.frame, textvariable=self.data['telefono'])
         self.email_label = Label(self.frame, text='Email')
-        self.email_data = Entry(self.frame)
+        self.email_data = Entry(self.frame, textvariable=self.data['email'])
         self.nacimiento_label = Label(self.frame, text='Fecha Nacimiento:')
-        self.nacimiento_data = Entry(self.frame)
+        self.nacimiento_data = Entry(self.frame, textvariable=self.data['nacimiento'])
         self.curso_label = Label(self.frame, text='Curso:')
-        self.curso_data = Entry(self.frame)
+        self.curso_data = Entry(self.frame, textvariable=self.data['curso'])
         self.inasistencias_label = Label(self.frame, text='Inasistencias:')
-        self.inasistencias_data = Entry(self.frame)
+        self.inasistencias_data = Entry(self.frame, textvariable=self.data['inasistencias'])
         self.concepto_label = Label(self.frame, text='Concepto:')
-        self.concepto_data = Entry(self.frame)
+        self.concepto_data = Entry(self.frame, textvariable=self.data['concepto'])
         self.alta_label = Label(self.frame, text='Fecha de Alta:')
-        self.alta_data = Entry(self.frame)
+        self.alta_data = Entry(self.frame, textvariable=self.data['alta'])
         self.baja_label = Label(self.frame, text='Fecha de Baja:')
-        self.baja_data = Entry(self.frame)
+        self.baja_data = Entry(self.frame, textvariable=self.data['baja'])
         self.username_label = Label(self.frame, text='Usuario:')
-        self.username_data = Entry(self.frame)
+        self.username_data = Entry(self.frame, textvariable=self.data['username'])
 
         self.return_button = Button(
             self.frame, text='Cancelar', foreground='red', command=self.cancel
@@ -414,40 +439,43 @@ class ConsultaAlumno:
         center(master)
 
     def search(self):
-        print('Buscando...')
-        # self.data['nombre'].set('Name')
+        try:
+            result = bd_escuela.cons_alumno(int(self.nro_reg_entry.get()))
+            
+            self.data['nombre'].set(str(result.get_nombre()))
+            self.data['apellido'].set(str(result.get_apellido()))
+            self.data['dni'].set(str(result.get_dni()))
+            self.data['direccion'].set(str(result.get_direccion()))
+            self.data['telefono'].set(str(result.get_telefono()))
+            self.data['email'].set(str(result.get_email()))
+            self.data['nacimiento'].set(str(result.get_nacimiento()))
+            self.data['curso'].set(str(result.get_curso()))
+            self.data['alta'].set(str(result.get_alta()))
+            self.data['baja'].set(str(result.get_baja()))
+            self.data['username'].set(str(result.get_username()))
+            self.data['inasistencias'].set(str(result.get_inasistencias()))
+            self.data['concepto'].set(str(result.get_concepto()))
+
+        except Exception as e:
+            messagebox.showerror('Hubo un error...', '{0}'.format(str(e)))
 
     def cancel(self):
-        print('Cancelando...')
         swap_view(self, 'main_menu')
 
 # Layout done
+# Logic done
+# Tested
 class AltaAlumno:
     def __init__(self, master):
         self.frame = Frame(master)
         self.frame.pack()
-        master.title('Modificar')
-
-        # Data
-        self.data = {
-            'nro_reg': StringVar(),
-            'nombre': StringVar(),
-            'apellido': StringVar(),
-            'dni': StringVar(),
-            'direccion': StringVar(),
-            'telefono': StringVar(),
-            'email': StringVar(),
-            'nacimiento': StringVar(),
-            'curso': StringVar(),
-            'username': StringVar(),
-            'password': StringVar()
-        }
+        master.title('Alta')
 
         # Widgets
         self.nro_reg_label = Label(self.frame, text='Número de Registro:')
         self.nro_reg_entry = Entry(self.frame)
         self.nombre_label = Label(self.frame, text='Nombre:')
-        self.nombre_entry = Entry(self.frame, textvariable=self.data['nombre'])
+        self.nombre_entry = Entry(self.frame)
         self.apellido_label = Label(self.frame, text='Apellido:')
         self.apellido_entry = Entry(self.frame)
         self.dni_label = Label(self.frame, text='DNI:')
@@ -509,11 +537,28 @@ class AltaAlumno:
         center(master)
     
     def alta(self):
-        print('Cargando alumno...')
-        # self.data['nombre'].set('Name')
+        try:
+            al = Alumno(
+                nro_reg = int(self.nro_reg_entry.get()),
+                nombre = self.nombre_entry.get(),
+                apellido = self.apellido_entry.get(),
+                dni = int(self.dni_entry.get()),
+                direccion = self.direccion_entry.get(),
+                telefono = self.telefono_entry.get(),
+                email = self.email_entry.get(),
+                nacimiento = eval(self.nacimiento_entry.get()),
+                # Expected eval result is tuple.
+                # No controls rn.
+                curso = int(self.curso_entry.get()),
+                username = self.username_entry.get(),
+                password= self.password_entry.get()
+            )
+            bd_escuela.reg_alumno(al)
+            messagebox.showinfo('Exito', 'Se ha registrado el alumno.')
+        except Exception as e:
+            messagebox.showerror('Hubo un error...', '{0}'.format(str(e)))
 
     def cancel(self):
-        print('Cancelando...')
         swap_view(self, 'main_menu')
 
 # Layout done
@@ -525,7 +570,6 @@ class ModificarAlumno:
 
         # Data
         self.data = {
-            'nro_reg': StringVar(),
             'nombre': StringVar(),
             'apellido': StringVar(),
             'dni': StringVar(),
@@ -955,8 +999,36 @@ class Restore:
 
 # Start main window
 root = Tk()
-# Start Database
+
+
+
+# Init database
 bd_escuela = BDEscuela()
+
+# Login
+privilege = 'P'
+username = 'admin'
+password = 'ad1'
+bd_escuela.inic_esc(privilege, username, password)
+# Add new user
+bd_escuela.reg_usuario('P', 'python_admin', 'admin123')
+# Create new Alumno
+al = Alumno(
+    nro_reg=4000,
+    nombre='Python',
+    apellido='Anaconda',
+    dni=41140240,
+    direccion='My Address',
+    telefono='555-555-5555',
+    email='test@sample.com',
+    nacimiento=(1, 1, 2000),
+    curso=3,
+    username='pythoniscool',
+    password='123456'
+)
+# Register Alumno
+bd_escuela.reg_alumno(al)
+
 # Set login
 Login(root)
 # Start

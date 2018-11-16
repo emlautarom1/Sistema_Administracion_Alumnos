@@ -44,7 +44,8 @@ class TAlumnos:
         if nro_reg in self.listado:
             return self.listado[nro_reg]
         else:
-            raise KeyError
+            raise KeyError(
+                'No hay alumno con número de registro {0}'.format(nro_reg))
 
     def listado_inas(self):
         # Returns list of Alumnos

@@ -38,7 +38,7 @@ class Alumno:
             self.alta = (datetime.datetime.now().day,
                          datetime.datetime.now().month,
                          datetime.datetime.now().year)
-            self.baja = [0, 0, 0]
+            self.baja = (0, 0, 0)
             self.username = username
             self.password = password
             self.concepto = Alumno.conceptos['MA']
@@ -89,7 +89,7 @@ class Alumno:
     def get_nacimiento(self):
         return self.nacimiento
 
-    def set_nacimiento(self, nacimiento: list):
+    def set_nacimiento(self, nacimiento: tuple):
         self.nacimiento = nacimiento
 
     def get_curso(self):
@@ -101,13 +101,13 @@ class Alumno:
     def get_alta(self):
         return self.alta
 
-    def set_alta(self, alta: list):
+    def set_alta(self, alta: tuple):
         self.alta = alta
 
     def get_baja(self):
         return self.baja
 
-    def set_baja(self, baja: list):
+    def set_baja(self, baja: tuple):
         self.baja = baja
 
     def get_username(self):

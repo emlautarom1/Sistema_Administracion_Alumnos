@@ -36,32 +36,43 @@ class BDEscuela ():
 
     def elim_usuario(self, privilege: str, username: str):
         if self.is_privileged():
-            key = privilege+'-'+username
+            key = privilege + '-' + username
             if key in self.acceso:
                 self.acceso.pop(key)
                 self.cant_usuarios -= 1
             else:
-                raise KeyError('User not in database')
+                raise KeyError('El usuario no está registrado.')
         else:
-            raise PermissionError('Not enough privileges')
+            raise PermissionError('Usted no puede realizar esta operación.')
 
     def reg_usuario(self, privilege: str, username: str, password: str):
         if self.is_privileged():
             if privilege in self.priv_keys:
                 key = privilege + '-' + username
                 if key in self.acceso:
-                    raise KeyError('User already in database')
+                    raise KeyError('El usuario ya está registrado')
                 else:
                     self.acceso[key] = password
                     self.cant_usuarios += 1
             else:
-                raise ValueError('Invalid privilege')
+                raise ValueError('El tipo de usuario es inválido.')
         else:
-            raise PermissionError('Not enough privileges')
+            raise PermissionError('Usted no puede realizar esta operación.')
 
     def reg_alumno(self, alumno: Alumno):
-        self.reg_usuario('A', alumno.get_username(), alumno.get_password())
-        self.get_table('T-alumnos').alta(alumno)
+        try:
+            self.reg_usuario('A', alumno.get_username(), alumno.get_password())
+        except:
+            raise KeyError(
+                'Ya existe un usuario con el nombre de usuario ingresado.')
+        try:
+            self.get_table('T-alumnos').alta(alumno)
+        except:
+            self.elim_usuario('A', alumno.get_username())
+            # Remove just inserted username from acceso
+            raise KeyError(
+                'Ya existe un alumno con el número de registro ingresado.')
+
         # New alumno should init all materias. Alta/Baja?
         # self.get_table('T-materias').init_materia(alumno.get_nro_reg())
 
