@@ -26,109 +26,103 @@ class Alumno:
             for key, value in from_dict.items():
                 setattr(self, key, value)
         else:
-            self.nro_reg = nro_reg
-            self.nombre = nombre
-            self.apellido = apellido
-            self.dni = dni
-            self.direccion = direccion
-            self.telefono = telefono
-            self.email = email
-            self.nacimiento = nacimiento
-            self.curso = curso
-            self.alta = [datetime.datetime.now().day,
-                         datetime.datetime.now().month,
-                         datetime.datetime.now().year]
-            self.username = username
-            self.password = password
-            self.concepto = 'Muy aceptable'
-            self.inasistencias = 0
+            self.__nro_reg = nro_reg
+            self.__nombre = nombre
+            self.__apellido = apellido
+            self.__dni = dni
+            self.__direccion = direccion
+            self.__telefono = telefono
+            self.__email = email
+            self.__nacimiento = nacimiento
+            self.__curso = curso
+            self.__alta = [datetime.datetime.now().day,
+                           datetime.datetime.now().month,
+                           datetime.datetime.now().year]
+            self.__username = username
+            self.__password = password
+            self.__concepto = 'Muy aceptable'
+            self.__inasistencias = 0
 
     def get_nro_reg(self):
-        return self.nro_reg
+        return self.__nro_reg
 
     def set_nro_reg(self, nro_reg: int):
-        self.nro_reg = nro_reg
+        self.__nro_reg = nro_reg
 
     def get_nombre(self):
-        return self.nombre
+        return self.__nombre
 
     def set_nombre(self, nombre: str):
-        self.nombre = nombre
+        self.__nombre = nombre
 
     def get_apellido(self):
-        return self.apellido
+        return self.__apellido
 
     def set_apellido(self, apellido: str):
-        self.apellido = apellido
+        self.__apellido = apellido
 
     def get_dni(self):
-        return self.dni
+        return self.__dni
 
     def set_dni(self, dni: int):
-        self.dni = dni
+        self.__dni = dni
 
     def get_direccion(self):
-        return self.direccion
+        return self.__direccion
 
     def set_direccion(self, direccion: str):
-        self.direccion = direccion
+        self.__direccion = direccion
 
     def get_telefono(self):
-        return self.telefono
+        return self.__telefono
 
     def set_telefono(self, telefono: int):
-        self.telefono = telefono
+        self.__telefono = telefono
 
     def get_email(self):
-        return self.email
+        return self.__email
 
     def set_email(self, email: str):
-        self.email = email
+        self.__email = email
 
     def get_nacimiento(self):
-        return self.nacimiento
+        return self.__nacimiento
 
     def set_nacimiento(self, nacimiento: list):
-        self.nacimiento = nacimiento
+        self.__nacimiento = nacimiento
 
     def get_curso(self):
-        return self.curso
+        return self.__curso
 
     def set_curso(self, curso: int):
-        self.curso = curso
+        self.__curso = curso
 
     def get_alta(self):
-        return self.alta
+        return self.__alta
 
     def set_alta(self, alta: list):
-        self.alta = alta
+        self.__alta = alta
 
     def get_username(self):
-        return self.username
+        return self.__username
 
     def set_username(self, username: str):
-        self.username = username
+        self.__username = username
 
     def get_password(self):
-        return self.password
+        return self.__password
 
     def set_password(self, password: str):
-        self.password = password
+        self.__password = password
 
     def get_concepto(self):
-        return self.concepto
+        return self.__concepto
 
     def set_concepto(self, concepto: str):
-        self.concepto = concepto
+        self.__concepto = concepto
 
     def get_inasistencias(self):
-        return self.inasistencias
+        return self.__inasistencias
 
     def set_inasistencias(self, inasistencias: int):
-        self.inasistencias = inasistencias
-
-    def update_inasistencias(self):
-        self.inasistencias += self.inasistencias
-
-    def correct_password(self, psw: str):
-        return self.password == psw
+        self.__inasistencias = inasistencias

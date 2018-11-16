@@ -9,24 +9,24 @@ import json
 class BDEscuela ():
 
     def __init__(self):
-        self.cant_usuarios = 1
-        self.acceso = {
+        self.__cant_usuarios = 1
+        self.__acceso = {
             'P-admin': 'ad1'
         }
-        self.privilege = 'NONE'
-        self.priv_keys = ['A', 'P', 'D']
-        self.nombre_tablas = {
+        self.__privilege = 'NONE'
+        self.__priv_keys = ['A', 'P', 'D']
+        self.__nombre_tablas = {
             'T-alumnos': 0,
             'T-materias': 1
         }
-        self.tablas = [TAlumnos(), TMaterias()]
+        self.__tablas = [TAlumnos(), TMaterias()]
 
     def inic_esc(self, privilege: str, username: str, password: str):
         key = privilege + '-' + username
-        for user in self.acceso:
+        for user in self.__acceso:
             if user == key:
-                if self.acceso[user] == password:
-                    self.privilege = privilege
+                if self.__acceso[user] == password:
+                    self.__privilege = privilege
                     # Set user privileges
                     return
                 else:
@@ -37,9 +37,9 @@ class BDEscuela ():
     def elim_usuario(self, privilege: str, username: str):
         if self.is_privileged():
             key = privilege + '-' + username
-            if key in self.acceso:
-                self.acceso.pop(key)
-                self.cant_usuarios -= 1
+            if key in self.__acceso:
+                self.__acceso.pop(key)
+                self.__cant_usuarios -= 1
             else:
                 raise KeyError('El usuario no está registrado.')
         else:
@@ -47,13 +47,13 @@ class BDEscuela ():
 
     def reg_usuario(self, privilege: str, username: str, password: str):
         if self.is_privileged():
-            if privilege in self.priv_keys:
+            if privilege in self.__priv_keys:
                 key = privilege + '-' + username
-                if key in self.acceso:
+                if key in self.__acceso:
                     raise KeyError('El usuario ya está registrado')
                 else:
-                    self.acceso[key] = password
-                    self.cant_usuarios += 1
+                    self.__acceso[key] = password
+                    self.__cant_usuarios += 1
             else:
                 raise ValueError('El tipo de usuario es inválido.')
         else:
@@ -138,12 +138,12 @@ class BDEscuela ():
         return self.get_table('T-materias').get_materias_alumno(nro_reg)
 
     def is_privileged(self):
-        return self.privilege == 'P' or self.privilege == 'D'
+        return self.__privilege == 'P' or self.__privilege == 'D'
 
     def get_table(self, tablename: str):
         try:
-            tablekey = self.nombre_tablas[tablename]
-            return self.tablas[tablekey]
+            tablekey = self.__nombre_tablas[tablename]
+            return self.__tablas[tablekey]
         except:
             raise ValueError('Invalid table name')
 
@@ -177,8 +177,8 @@ class BDEscuela ():
             except KeyError:
                 print('Alumno ya registrado, salteando...')
 
-        self.acceso.update(backup['acceso'])
-        self.cant_usuarios = len(self.acceso)
+        self.__acceso.update(backup['acceso'])
+        self.__cant_usuarios = len(self.__acceso)
 
         for val in backup['tablas'][1]['listado']:
             materia = Materia()
