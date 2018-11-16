@@ -547,7 +547,7 @@ class AltaAlumno:
                 telefono = self.telefono_entry.get(),
                 email = self.email_entry.get(),
                 nacimiento = eval(self.nacimiento_entry.get()),
-                # Expected eval result is tuple.
+                # Expected eval result is list.
                 # No controls rn.
                 curso = int(self.curso_entry.get()),
                 username = self.username_entry.get(),
