@@ -147,8 +147,9 @@ class BDEscuela ():
             f = open(folder + name + '.json', 'w')
             f.write(dumped)
             f.close()
-        except OSError:
-            print('File {0} in {1} could not be opened.'.format(name, folder))
+        except OSError():
+            raise OSError('El archivo {0} en {1} no se pudo abrir.'.format(
+                name, folder))
 
     def carga_bd(self, name: str, folder: str):
 
@@ -157,15 +158,15 @@ class BDEscuela ():
             data = f.read()
             f.close()
         except OSError:
-            print('File {0} in {1} could not be opened.'.format(name, folder))
-            return
+            raise OSError('El archivo {0} en {1} no se pudo abrir.'.format(
+                name, folder))
 
         backup = json.loads(data)
         for alum in backup['tablas'][0]['listado'].values():
             try:
                 self.reg_alumno(Alumno(from_dict=alum))
             except KeyError:
-                print('Alumno already in database, skipping...')
+                print('Alumno ya registrado, salteando...')
 
         self.acceso.update(backup['acceso'])
         self.cant_usuarios = len(self.acceso)
@@ -176,6 +177,6 @@ class BDEscuela ():
                 setattr(materia, key, value)
             try:
                 self.get_table('T-materias').alta(materia)
-            except:
+            except KeyError:
                 print('Materia {0} from {1} already in database, skipping...'.format(
                     materia.nombre, materia.nro_reg))
