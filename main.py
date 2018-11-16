@@ -35,7 +35,7 @@ bd_escuela.reg_alumno(al)
 
 # Modify Alumno
 al.set_inasistencias(18)
-bd_escuela.mod_alumno(al)
+# bd_escuela.mod_alumno(al)
 
 # Listado_inas
 inas = bd_escuela.get_table('T-alumnos').listado_inas()
@@ -57,11 +57,11 @@ bd_escuela.get_table('T-materias').alta(mat2)
 bd_escuela.get_table('T-materias').alta(mat3)
 
 # Materias de 4000
-materias = bd_escuela.get_table('T-materias').get_materias_de_alumno(4000)
-for m in materias:
-    print(m.get_nombre())
-    print(m.get_notas())
-print('------------')
+# materias = bd_escuela.get_table('T-materias').get_materias_de_alumno(4000)
+# for m in materias:
+#     print(m.get_nombre())
+#     print(m.get_notas())
+# print('------------')
 
 # Make system backup
 bd_escuela.backup(file_name, file_folder)

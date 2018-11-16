@@ -36,9 +36,9 @@ def swap_view(old_view, new_view):
     elif new_view == 'legajo_registro':
         LegajoRegistro(root)
     elif new_view == 'listado_inas':
-        raise NotImplementedError
+        ListadoInas(root)
     elif new_view == 'listado_curso':
-        raise NotImplementedError
+        ListadoCurso(root)
     elif new_view == 'consulta_alumno':
         ConsultaAlumno(root)
     elif new_view == 'alta_alumno':
@@ -356,6 +356,7 @@ class TablaAlumno:
                 'Curso',
                 'Teléfono',
                 'Fecha de Nacimiento',
+                'Concepto',
                 'Email'
             ]
         )
@@ -379,6 +380,7 @@ class TablaAlumno:
                         al.get_curso(),
                         al.get_telefono(),
                         al.get_nacimiento(),
+                        al.get_concepto(),
                         al.get_email()
                     ]
                 )
@@ -475,6 +477,132 @@ class LegajoRegistro:
     def cancel(self):
         swap_view(self, 'main_menu')
 
+# Layout done
+# Logic done
+# Tested
+class ListadoInas:
+    def __init__(self, master):
+        self.frame = Frame(master)
+        self.frame.pack()
+        # Set title
+        master.title('Tabla de Inasistencias')
+
+        # Widgets
+
+        self.table = Table(
+            self.frame, 
+            [
+                'Nombre',
+                'Apellido',
+                'Curso',
+                'Concepto'
+            ]
+        )
+        self.return_button = Button(
+            self.frame, text='Volver', foreground='blue', command=self.cancel)
+
+        data = bd_escuela.get_table('T-alumnos').listado_inas()
+        for al in data:
+            self.table.insert_row(
+                [
+                    al.get_nombre(),
+                    al.get_apellido(),
+                    al.get_curso(),
+                    al.get_concepto()
+                ]
+            )
+
+        # Layout
+        self.table.grid(row=1, column=1, sticky='EW')
+        self.frame.rowconfigure(2, minsize=50)
+        self.return_button.grid(row=3, column=1, sticky='E')
+
+        set_grid_margin(self.frame, 1, 3, 20)
+
+        center(master)
+
+    def cancel(self):
+        swap_view(self, 'main_menu')
+
+
+class ListadoCurso:
+    def __init__(self, master):
+        self.frame = Frame(master)
+        self.frame.pack()
+        # Set title
+        master.title('Legajo por Registro')
+        
+        # Topbar frame
+        self.top_frame = Frame(self.frame)
+        
+        # Widgets
+        self.curso_label = Label(self.top_frame, text='Curso:')
+        self.curso_entry = Entry(self.top_frame)
+        
+        self.search_button = Button(
+            self.top_frame, text='Buscar', foreground='green', command=self.search)
+
+        self.table = Table(
+            self.frame, 
+            [
+                'Curso',
+                'Apellido',
+                'Nombre',
+                'Número de Registro',
+                'DNI'
+            ],
+        )
+
+        self.return_button = Button(
+            self.frame, text='Volver', foreground='blue', command=self.cancel)
+
+        # Layout
+        # Topbar
+        self.curso_label.grid(row=1, column=1, sticky= 'W')
+        self.curso_entry.grid(row=1, column=2)
+        self.top_frame.columnconfigure(3, minsize=20)
+        self.search_button.grid(row=1, column=4)
+
+        # Main Frame
+        self.top_frame.grid(row=1, column=1, sticky='W')
+        self.frame.rowconfigure(2, minsize=20)
+        self.table.grid(row=3, column=1, sticky='EW')
+        self.frame.rowconfigure(4, minsize=50)
+        self.return_button.grid(row=5, column=1, sticky='E')
+
+        set_grid_margin(self.frame, 1, 5)
+
+        center(master)
+
+    def search(self):
+
+        try:
+            data = bd_escuela.get_table('T-alumnos').listado_reg_x_curso(
+                int(self.curso_entry.get())
+            )
+
+            if len(data) == 0:
+                messagebox.showerror('Hubo un error...', 'No hay alumnos en el curso indicado.')
+                swap_view(self, 'main_menu')
+            else:
+                # Disable multiple search
+                self.search_button.config(state='disabled')
+                for t in data:
+                    self.table.insert_row(
+                        [
+                            t[0],
+                            t[1],
+                            t[2],
+                            t[3],
+                            t[4],
+                        ]
+                    )
+
+        except Exception as e:
+            messagebox.showerror('Hubo un error...', '{0}'.format(str(e)))
+
+    def cancel(self):
+        swap_view(self, 'main_menu')
 
 # Layout done
 # Logic done
@@ -497,7 +625,6 @@ class ConsultaAlumno:
             'nacimiento': StringVar(),
             'curso': StringVar(),
             'alta': StringVar(),
-            'baja': StringVar(),
             'username': StringVar(),
             'inasistencias': StringVar(),
             'concepto': StringVar()
@@ -530,12 +657,10 @@ class ConsultaAlumno:
         self.inasistencias_data = Entry(self.frame, textvariable=self.data['inasistencias'])
         self.concepto_label = Label(self.frame, text='Concepto:')
         self.concepto_data = Entry(self.frame, textvariable=self.data['concepto'])
-        self.alta_label = Label(self.frame, text='Fecha de Alta:')
-        self.alta_data = Entry(self.frame, textvariable=self.data['alta'])
-        self.baja_label = Label(self.frame, text='Fecha de Baja:')
-        self.baja_data = Entry(self.frame, textvariable=self.data['baja'])
         self.username_label = Label(self.frame, text='Usuario:')
         self.username_data = Entry(self.frame, textvariable=self.data['username'])
+        self.alta_label = Label(self.frame, text='Fecha de Alta:')
+        self.alta_data = Entry(self.frame, textvariable=self.data['alta'])
 
         self.return_button = Button(
             self.frame, text='Cancelar', foreground='red', command=self.cancel
@@ -543,43 +668,42 @@ class ConsultaAlumno:
 
         # Layout
         self.nro_reg_label.grid(row=1, column=1)
-        self.nro_reg_entry.grid(row=1, column=2, sticky='EW')
-        self.search_button.grid(row=2, column=2, sticky='EW')
+        self.nro_reg_entry.grid(row=1, column=3, sticky='EW')
+        self.search_button.grid(row=2, column=3, sticky='EW')
 
         self.frame.rowconfigure(3, minsize=10)
+        self.frame.columnconfigure(2, minsize=10)
 
         self.nombre_label.grid(row=4, column=1)
         self.nombre_data.grid(row=5, column=1)
-        self.apellido_label.grid(row=4, column=2)
-        self.apellido_data.grid(row=5, column=2)
+        self.apellido_label.grid(row=4, column=3)
+        self.apellido_data.grid(row=5, column=3)
         self.dni_label.grid(row=6, column=1)
         self.dni_data.grid(row=7, column=1)
-        self.direccion_label.grid(row=6, column=2)
-        self.direccion_data.grid(row=7, column=2)
+        self.direccion_label.grid(row=6, column=3)
+        self.direccion_data.grid(row=7, column=3)
         self.telefono_label.grid(row=8, column=1)
         self.telefono_data.grid(row=9, column=1)
-        self.email_label.grid(row=8, column=2)
-        self.email_data.grid(row=9, column=2)
+        self.email_label.grid(row=8, column=3)
+        self.email_data.grid(row=9, column=3)
         self.nacimiento_label.grid(row=10, column=1)
         self.nacimiento_data.grid(row=11, column=1)
-        self.curso_label.grid(row=10, column=2)
-        self.curso_data.grid(row=11, column=2)
+        self.curso_label.grid(row=10, column=3)
+        self.curso_data.grid(row=11, column=3)
         self.inasistencias_label.grid(row=12, column=1)
         self.inasistencias_data.grid(row=13, column=1)
-        self.concepto_label.grid(row=12, column=2)
-        self.concepto_data.grid(row=13, column=2)
+        self.concepto_label.grid(row=12, column=3)
+        self.concepto_data.grid(row=13, column=3)
+        self.username_label.grid(row=14, column=3)
+        self.username_data.grid(row=15, column=3)
         self.alta_label.grid(row=14, column=1)
         self.alta_data.grid(row=15, column=1)
-        self.baja_label.grid(row=14, column=2)
-        self.baja_data.grid(row=15, column=2)
-        self.username_label.grid(row=16, column=2)
-        self.username_data.grid(row=17, column=2)
 
-        self.frame.rowconfigure(18, minsize=50)
+        self.frame.rowconfigure(16, minsize=50)
 
-        self.return_button.grid(row=19, column=2, sticky='EW')
+        self.return_button.grid(row=17, column=3, sticky='EW')
 
-        set_grid_margin(self.frame, 2, 19)
+        set_grid_margin(self.frame, 3, 17)
 
         center(master)
 
@@ -596,7 +720,6 @@ class ConsultaAlumno:
             self.data['nacimiento'].set(str(result.get_nacimiento()))
             self.data['curso'].set(str(result.get_curso()))
             self.data['alta'].set(str(result.get_alta()))
-            self.data['baja'].set(str(result.get_baja()))
             self.data['username'].set(str(result.get_username()))
             self.data['inasistencias'].set(str(result.get_inasistencias()))
             self.data['concepto'].set(str(result.get_concepto()))

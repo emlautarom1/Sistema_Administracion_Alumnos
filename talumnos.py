@@ -64,7 +64,7 @@ class TAlumnos:
 
     def listado_inas(self):
         # Returns list of Alumnos
-        return list(filter(lambda alumno: alumno.inasistencias > 15, self.listado.values()))
+        return list(filter(lambda alumno: alumno.get_inasistencias() > 15, self.listado.values()))
 
     def listado_reg_x_curso(self, curso: int):
         # Returns list of tuples : (curso, apellido, nombre, nro_reg, dni)
