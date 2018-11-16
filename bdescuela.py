@@ -85,9 +85,8 @@ class BDEscuela ():
         self.elim_usuario('A', username)
         # Remove alumno from acces
 
-    def mod_alumno(self, alumno: Alumno):
-        self.get_table('T-alumnos').baja(alumno.get_nro_reg())
-        self.get_table('T-alumnos').alta(alumno)
+    def mod_alumno(self, nro_reg: int, mods: dict):
+        self.get_table('T-alumnos').modificar(nro_reg, mods)
 
     def cons_alumno(self, nro_reg: int):
         return self.get_table('T-alumnos').consulta(nro_reg)

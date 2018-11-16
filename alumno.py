@@ -2,11 +2,11 @@ import datetime
 
 
 class Alumno:
-    conceptos = {
-        'MA': 'Muy Aceptable',
-        'A': 'Aceptable',
-        'NA': 'No aceptable'
-    }
+    conceptos = [
+        'Muy aceptable',
+        'Aceptable',
+        'No aceptable'
+    ]
 
     def __init__(self,
                  nro_reg=0,
@@ -41,7 +41,7 @@ class Alumno:
             self.baja = (0, 0, 0)
             self.username = username
             self.password = password
-            self.concepto = Alumno.conceptos['MA']
+            self.concepto = 'Muy aceptable'
             self.inasistencias = 0
 
     def get_nro_reg(self):

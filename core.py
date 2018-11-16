@@ -562,6 +562,8 @@ class AltaAlumno:
         swap_view(self, 'main_menu')
 
 # Layout done
+# Logic done
+# Tested
 class ModificarAlumno:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -579,7 +581,6 @@ class ModificarAlumno:
             'nacimiento': StringVar(),
             'curso': StringVar(),
             'inasistencias': StringVar(),
-            'concepto': StringVar()
         }
 
         # Widgets
@@ -587,32 +588,31 @@ class ModificarAlumno:
         self.nro_reg_entry = Entry(self.frame)
         self.search_button = Button(
             self.frame, text='Buscar', foreground='green', command=self.search)
-        self.update_button = Button(
-            self.frame, text='Modificar', foreground='blue', command=self.modify)
+        self.modify_button = Button(
+            self.frame, text='Modificar', foreground='blue', command=self.modify, state='disabled')
         self.return_button = Button(
             self.frame, text='Cancelar', foreground='red', command=self.cancel)
         self.nombre_label = Label(self.frame, text='Nombre:')
         self.nombre_entry = Entry(self.frame, textvariable=self.data['nombre'])
         self.apellido_label = Label(self.frame, text='Apellido:')
-        self.apellido_entry = Entry(self.frame)
+        self.apellido_entry = Entry(self.frame, textvariable=self.data['apellido'])
         self.dni_label = Label(self.frame, text='DNI:')
-        self.dni_entry = Entry(self.frame)
+        self.dni_entry = Entry(self.frame, textvariable=self.data['dni'])
         self.direccion_label = Label(self.frame, text='Dirección:')
-        self.direccion_entry = Entry(self.frame)
+        self.direccion_entry = Entry(self.frame, textvariable=self.data['direccion'])
         self.telefono_label = Label(self.frame, text='Teléfono:')
-        self.telefono_entry = Entry(self.frame)
+        self.telefono_entry = Entry(self.frame, textvariable=self.data['telefono'])
         self.email_label = Label(self.frame, text='Email')
-        self.email_entry = Entry(self.frame)
+        self.email_entry = Entry(self.frame, textvariable=self.data['email'])
         self.nacimiento_label = Label(self.frame, text='Fecha Nacimiento:')
-        self.nacimiento_entry = Entry(self.frame)
+        self.nacimiento_entry = Entry(self.frame, textvariable=self.data['nacimiento'])
         self.curso_label = Label(self.frame, text='Curso:')
-        self.curso_entry = Entry(self.frame)
+        self.curso_entry = Entry(self.frame, textvariable=self.data['curso'])
         self.inasistencias_label = Label(self.frame, text='Inasistencias:')
-        self.inasistencias_entry = Entry(self.frame)
+        self.inasistencias_entry = Entry(self.frame, textvariable=self.data['inasistencias'])
         self.concepto_label = Label(self.frame, text='Concepto:')
         self.concepto_combo = ttk.Combobox(self.frame, state='readonly')
-        self.concepto_combo['values'] = [
-            'Muy Aceptable', 'Aceptable', 'No aceptable']
+        self.concepto_combo['values'] = Alumno.conceptos
 
         # Layout
         self.nro_reg_label.grid(row=1, column=1)
@@ -645,21 +645,57 @@ class ModificarAlumno:
         self.frame.rowconfigure(14, minsize=50)
 
         self.return_button.grid(row=15, column=1, sticky='EW')
-        self.update_button.grid(row=15, column=2, sticky='EW')
+        self.modify_button.grid(row=15, column=2, sticky='EW')
 
         set_grid_margin(self.frame, 2, 15)
 
         center(master)
 
     def search(self):
-        print('Buscando...')
-        # self.data['nombre'].set('Name')
+        try:
+            result = bd_escuela.cons_alumno(int(self.nro_reg_entry.get()))
+            
+            self.data['nombre'].set(str(result.get_nombre()))
+            self.data['apellido'].set(str(result.get_apellido()))
+            self.data['dni'].set(str(result.get_dni()))
+            self.data['direccion'].set(str(result.get_direccion()))
+            self.data['telefono'].set(str(result.get_telefono()))
+            self.data['email'].set(str(result.get_email()))
+            self.data['nacimiento'].set(str(result.get_nacimiento()))
+            self.data['curso'].set(str(result.get_curso()))
+            self.data['inasistencias'].set(str(result.get_inasistencias()))
+            self.concepto_combo.current(
+              Alumno.conceptos.index(result.get_concepto()) 
+            )
+
+            self.nro_reg_entry.config(state='disabled')
+            self.search_button.config(state='disabled')
+            self.modify_button.config(state='normal')
+
+        except Exception as e:
+            messagebox.showerror('Hubo un error...', '{0}'.format(str(e)))
 
     def modify(self):
-        print('Modificando...')
+        try:
+            mods = {
+                'nombre': self.nombre_entry.get(),
+                'apellido': self.apellido_entry.get(),
+                'dni': int(self.dni_entry.get()),
+                'direccion': self.direccion_entry.get(),
+                'telefono': self.telefono_entry.get(),
+                'email': self.email_entry.get(),
+                'nacimiento': eval(self.nacimiento_entry.get()),
+                'curso': int(self.curso_entry.get()),
+                'inasistencias': int(self.inasistencias_entry.get()),
+                'concepto': self.concepto_combo.get()
+            }
+            bd_escuela.mod_alumno(int(self.nro_reg_entry.get()), mods)
+            messagebox.showinfo('Exito', 'Se ha modificado el alumno.')
 
+        except Exception as e:
+            messagebox.showerror('Hubo un error...', '{0}'.format(str(e)))
+        
     def cancel(self):
-        print('Cancelando...')
         swap_view(self, 'main_menu')
 
 # Layout done

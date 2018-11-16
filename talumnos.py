@@ -40,6 +40,18 @@ class TAlumnos:
         else:
             raise KeyError
 
+    def modificar(self, nro_reg: int, mods: dict):
+        if nro_reg in self.listado:
+            al = self.listado[nro_reg]
+            try:
+                for key, value in mods.items():
+                    setattr(al, key, value)
+            except:
+                raise ValueError('No se pudieron actualizar los campos.')
+        else:
+            raise KeyError(
+                'No hay alumno con número de registro {0}'.format(nro_reg))
+
     def consulta(self, nro_reg: int):
         if nro_reg in self.listado:
             return self.listado[nro_reg]
