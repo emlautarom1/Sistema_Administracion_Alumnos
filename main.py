@@ -104,10 +104,10 @@ class Login:
 
     def login(self):
         try:
-            # bd_escuela.inic_esc(self.privilege_combo.get()[0],
-            #                     self.username_entry.get(),
-            #                     self.password_entry.get()
-            # )
+            bd_escuela.inic_esc(self.privilege_combo.get()[0],
+                                self.username_entry.get(),
+                                self.password_entry.get()
+            )
             swap_view(self, 'main_menu')
         except Exception as e:
             messagebox.showerror('Hubo un error...', "{0}".format(str(e)))
@@ -1394,40 +1394,41 @@ root = Tk()
 bd_escuela = BDEscuela()
 
 # ---------------------------------------------------
+# Testing routine
 # Login
-privilege = 'P'
-username = 'admin'
-password = 'ad1'
-bd_escuela.inic_esc(privilege, username, password)
-# Add new user
-bd_escuela.reg_usuario('P', 'python_admin', 'admin123')
-# Create new Alumno
-al = Alumno(
-    nro_reg=4000,
-    nombre='Python',
-    apellido='Anaconda',
-    dni=41140240,
-    direccion='My Address',
-    telefono='555-555-5555',
-    email='test@sample.com',
-    nacimiento=(1, 1, 2000),
-    curso=3,
-    username='pythoniscool',
-    password='123456'
-)
-# Register Alumno
-bd_escuela.reg_alumno(al)
-# Create new Materias
-mat = Materia('Matematica', 4000)
-mat.set_notas([9, 9, 9])
-mat2 = Materia('Lengua', 4000)
-mat2.set_notas([1, 1, 1])
-mat3 = Materia('Etica', 4000)
-mat3.set_notas([4, 4, 4])
-# # Add Materias
-bd_escuela.get_table('T-materias').alta(mat)
-bd_escuela.get_table('T-materias').alta(mat2)
-bd_escuela.get_table('T-materias').alta(mat3)
+# privilege = 'P'
+# username = 'admin'
+# password = 'ad1'
+# bd_escuela.inic_esc(privilege, username, password)
+# # Add new user
+# bd_escuela.reg_usuario('P', 'python_admin', 'admin123')
+# # Create new Alumno
+# al = Alumno(
+#     nro_reg=4000,
+#     nombre='Python',
+#     apellido='Anaconda',
+#     dni=41140240,
+#     direccion='My Address',
+#     telefono='555-555-5555',
+#     email='test@sample.com',
+#     nacimiento=(1, 1, 2000),
+#     curso=3,
+#     username='pythoniscool',
+#     password='123456'
+# )
+# # Register Alumno
+# bd_escuela.reg_alumno(al)
+# # Create new Materias
+# mat = Materia('Matematica', 4000)
+# mat.set_notas([9, 9, 9])
+# mat2 = Materia('Lengua', 4000)
+# mat2.set_notas([1, 1, 1])
+# mat3 = Materia('Etica', 4000)
+# mat3.set_notas([4, 4, 4])
+# # # Add Materias
+# bd_escuela.get_table('T-materias').alta(mat)
+# bd_escuela.get_table('T-materias').alta(mat2)
+# bd_escuela.get_table('T-materias').alta(mat3)
 # ---------------------------------------------------
 
 # Set login
