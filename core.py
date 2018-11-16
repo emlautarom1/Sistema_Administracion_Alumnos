@@ -749,7 +749,7 @@ class ConsultaMateria:
         master.title('Consulta')
         
         # Data
-        self.data = [StringVar()] * 3
+        self.data = [StringVar(), StringVar(), StringVar()]
 
         # Widgets
         self.nro_reg_label = Label(self.frame, text='Número de Registro:')
@@ -811,6 +811,8 @@ class ConsultaMateria:
         swap_view(self, 'main_menu')
 
 # Layout done
+# Logic done
+# Tested
 class AltaMateria:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -862,19 +864,36 @@ class AltaMateria:
         center(master)
 
     def alta(self):
-        print('Cargando materia...')
+        try:
+            m = Materia(
+                self.nmbr_materia_entry.get(),
+                int(self.nro_reg_entry.get())
+            )
+            m.set_nota_trimestre(0, int(self.nota1_entry.get()))
+            m.set_nota_trimestre(1, int(self.nota2_entry.get()))
+            m.set_nota_trimestre(2, int(self.nota3_entry.get()))
+            bd_escuela.alta_materia(m)
+            messagebox.showinfo('Exito', 'Se ha cargado la materia.')
+
+        except Exception as e:
+            messagebox.showerror('Hubo un error...', '{0}'.format(str(e)))
 
     def cancel(self):
-        print('Cancelando...')
         swap_view(self, 'main_menu')
 
 # Layout done
+# Logic done
+# Tested
 class ModificarMateria:
     def __init__(self, master):
         self.frame = Frame(master)
         self.frame.pack()
         # Set title
         master.title('Modificar')
+    
+        # Data
+        self.data = [StringVar(), StringVar(), StringVar()]
+
         # Widgets
         self.nro_reg_label = Label(self.frame, text='Número de Registro:')
         self.nro_reg_entry = Entry(self.frame)
@@ -885,17 +904,16 @@ class ModificarMateria:
             self.frame, text='Buscar', foreground='green', command=self.search)
 
         self.nota1_label = Label(self.frame, text='Primer Trimestre:')
-        self.nota1_entry = Entry(self.frame)
+        self.nota1_entry = Entry(self.frame, textvariable=self.data[0])
 
         self.nota2_label = Label(self.frame, text='Segundo Trimestre:')
-        self.nota2_entry = Entry(self.frame)
+        self.nota2_entry = Entry(self.frame, textvariable=self.data[1])
 
         self.nota3_label = Label(self.frame, text='Tercer Trimestre:')
-        self.nota3_entry = Entry(self.frame)
+        self.nota3_entry = Entry(self.frame, textvariable=self.data[2])
 
         self.modify_button = Button(
-            self.frame, text='Modificar', foreground='blue',
-            command=self.modify)
+            self.frame, text='Modificar', foreground='blue', state='disabled', command=self.modify)
         self.return_button = Button(
             self.frame, text='Cancelar', foreground='red', command=self.cancel)
 
@@ -925,16 +943,38 @@ class ModificarMateria:
         center(master)
 
     def search(self):
-        print('Buscando materia...')
+        try:
+            result = bd_escuela.cons_materia(
+                int(self.nro_reg_entry.get()),
+                self.nmbr_materia_entry.get()
+            )
+            for i in range(3):
+                self.data[i].set(result.get_nota_trimestre(i))
+            
+            self.modify_button.config(state='normal')
+            self.nmbr_materia_entry.config(state='disabled')
+            self.nro_reg_entry.config(state='disabled')
+
+        except Exception as e:
+            messagebox.showerror('Hubo un error...', '{0}'.format(str(e)))
 
     def modify(self):
-        print('Modificando materia...')
+        m = Materia(
+                self.nmbr_materia_entry.get(),
+                int(self.nro_reg_entry.get())
+            )
+        m.set_nota_trimestre(0, int(self.nota1_entry.get()))
+        m.set_nota_trimestre(1, int(self.nota2_entry.get()))
+        m.set_nota_trimestre(2, int(self.nota3_entry.get()))
+        bd_escuela.mod_materia(m)
+        messagebox.showinfo('Exito', 'Se ha modificado la materia.')
 
     def cancel(self):
-        print('Cancelando...')
         swap_view(self, 'main_menu')
 
-# Layout Done
+# Layout done
+# Logic done
+# Tested
 class BajaMateria:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -967,10 +1007,16 @@ class BajaMateria:
         center(master)
 
     def delete(self):
-        print('Eliminando...')
+        try:
+            bd_escuela.baja_materia(
+                int(self.nro_reg_entry.get()),
+                self.nmbr_materia_entry.get()
+            )
+            messagebox.showinfo('Exito', 'Se ha dado de baja la materia.')
+        except Exception as e:
+            messagebox.showerror('Hubo un error...', '{0}'.format(str(e)))
 
     def cancel(self):
-        print('Cancelando...')
         swap_view(self, 'main_menu')
 
 # Layout done
