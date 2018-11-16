@@ -73,9 +73,6 @@ class BDEscuela ():
             raise KeyError(
                 'Ya existe un alumno con el número de registro ingresado.')
 
-        # New alumno should init all materias. Alta/Baja?
-        # self.get_table('T-materias').init_materia(alumno.get_nro_reg())
-
     def baja_alumno(self, nro_reg: int):
         username = self.get_table('T-alumnos').consulta(nro_reg).get_username()
         self.get_table('T-materias').baja_total(nro_reg)
@@ -90,6 +87,46 @@ class BDEscuela ():
 
     def cons_alumno(self, nro_reg: int):
         return self.get_table('T-alumnos').consulta(nro_reg)
+
+    def alta_materia(self, materia: Materia):
+        nro_reg = materia.get_nro_reg()
+        try:
+            # Checks for valid nro_reg
+            self.cons_alumno(nro_reg)
+        except:
+            raise KeyError(
+                'No existe un alumno con el número de registro {0}'.format(nro_reg))
+        self.get_table('T-materias').alta(materia)
+
+    def baja_materia(self, nro_reg: int, nombre: str):
+        try:
+            # Checks for valid nro_reg
+            self.cons_alumno(nro_reg)
+        except:
+            raise KeyError(
+                'No existe un alumno con el número de registro {0}'.format(nro_reg))
+        self.get_table('T-materias').baja(nro_reg, nombre)
+
+    def mod_materia(self, materia: Materia):
+        nro_reg = materia.get_nro_reg()
+        try:
+            # Checks for valid nro_reg
+            self.cons_alumno(nro_reg)
+        except:
+            raise KeyError(
+                'No existe un alumno con el número de registro {0}'.format(nro_reg))
+        self.get_table('T-materias').baja(nro_reg, materia.get_nombre())
+        self.get_table('T-materias').alta(materia)
+        # If valid, removes and inserts materia
+
+    def cons_materia(self, nro_reg: int, nombre: str):
+        try:
+            # Checks for valid nro_reg
+            self.cons_alumno(nro_reg)
+        except:
+            raise KeyError(
+                'No existe un alumno con el número de registro {0}'.format(nro_reg))
+        return self.get_table('T-materias').consulta(nro_reg, nombre)
 
     def is_privileged(self):
         return self.privilege == 'P' or self.privilege == 'D'

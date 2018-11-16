@@ -21,7 +21,7 @@ class TMaterias:
     def alta(self, mat: Materia):
         for val in self.listado:
             if mat.get_nombre() == val.get_nombre() and mat.get_nro_reg() == val.get_nro_reg():
-                raise KeyError('Materia already in database')
+                raise KeyError('Ya existe la materia.')
         self.listado.append(mat)
 
     def baja(self, nro_reg: int, nombre: str):
@@ -30,7 +30,7 @@ class TMaterias:
                 self.listado.remove(val)
                 break
         else:
-            raise KeyError('Materia not in database')
+            raise KeyError('La materia no se encuentra.')
 
     def baja_total(self, nro_reg: int):
         to_remove = []
@@ -49,11 +49,7 @@ class TMaterias:
             if nro_reg == val.get_nro_reg()and nombre == val.get_nombre():
                 return val
         else:
-            raise KeyError('Materia not in database')
-
-    def init_materia(self, nro_reg: str):
-        for key_materia in self.key_materias:
-            self.alta(Materia(key_materia, nro_reg))
+            raise KeyError('La materia no se encuentra.')
 
     def get_materias_de_alumno(self, nro_reg: int):
         return list(filter(lambda m: m.get_nro_reg() == nro_reg, self.listado))

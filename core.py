@@ -738,13 +738,19 @@ class BajaAlumno:
     def cancel(self):
         swap_view(self, 'main_menu')
 
-# Layout Done
+# Layout done
+# Logic done
+# Tested
 class ConsultaMateria:
     def __init__(self, master):
         self.frame = Frame(master)
         self.frame.pack()
         # Set title
         master.title('Consulta')
+        
+        # Data
+        self.data = [StringVar()] * 3
+
         # Widgets
         self.nro_reg_label = Label(self.frame, text='Número de Registro:')
         self.nro_reg_entry = Entry(self.frame)
@@ -752,13 +758,13 @@ class ConsultaMateria:
         self.nmbr_materia_entry = Entry(self.frame)
 
         self.nota1_label = Label(self.frame, text='Primer Trimestre:')
-        self.nota1_data = Label(self.frame, text='---')
+        self.nota1_data = Entry(self.frame, textvariable=self.data[0])
 
         self.nota2_label = Label(self.frame, text='Segundo Trimestre:')
-        self.nota2_data = Label(self.frame, text='---')
+        self.nota2_data = Entry(self.frame, textvariable=self.data[1])
 
         self.nota3_label = Label(self.frame, text='Tercer Trimestre:')
-        self.nota3_data = Label(self.frame, text='---')
+        self.nota3_data = Entry(self.frame, textvariable=self.data[2])
 
         self.search_button = Button(
             self.frame, text='Buscar', foreground='green', command=self.search)
@@ -771,29 +777,37 @@ class ConsultaMateria:
         self.nmbr_materia_label.grid(row=2, column=1, sticky='W')
         self.nmbr_materia_entry.grid(row=2, column=2)
 
-        self.frame.rowconfigure(3, minsize=5)
+        self.frame.rowconfigure(3, minsize=10)
 
-        self.nota1_label.grid(row=4, column=1, columnspan=2)
-        self.nota1_data.grid(row=5, column=1, columnspan=2)
-        self.nota2_label.grid(row=6, column=1, columnspan=2)
-        self.nota2_data.grid(row=7, column=1, columnspan=2)
-        self.nota3_label.grid(row=8, column=1, columnspan=2)
-        self.nota3_data.grid(row=9, column=1, columnspan=2)
+        self.nota1_label.grid(row=4, column=1, sticky='W')
+        self.nota1_data.grid(row=4, column=2, sticky='EW')
+        self.nota2_label.grid(row=5, column=1, sticky='W')
+        self.nota2_data.grid(row=5, column=2, sticky='EW')
+        self.nota3_label.grid(row=6, column=1, sticky='W')
+        self.nota3_data.grid(row=6, column=2, sticky='EW')
 
-        self.frame.rowconfigure(10, minsize=50)
+        self.frame.rowconfigure(7, minsize=50)
 
-        self.return_button.grid(row=11, column=1, sticky='EW')
-        self.search_button.grid(row=11, column=2, sticky='EW')
+        self.return_button.grid(row=8, column=1, sticky='EW')
+        self.search_button.grid(row=8, column=2, sticky='EW')
 
-        set_grid_margin(self.frame, 2, 11)
+        set_grid_margin(self.frame, 2, 8)
 
         center(master)
 
     def search(self):
-        print('Buscando...')
+        try:
+            result = bd_escuela.cons_materia(
+                int(self.nro_reg_entry.get()),
+                self.nmbr_materia_entry.get()
+            )
+            for i in range(3):
+                self.data[i].set(result.get_nota_trimestre(i))
+            
+        except Exception as e:
+            messagebox.showerror('Hubo un error...', '{0}'.format(str(e)))
 
     def cancel(self):
-        print('Cancelando...')
         swap_view(self, 'main_menu')
 
 # Layout done
@@ -1040,12 +1054,10 @@ class Restore:
 
 # Start main window
 root = Tk()
-
-
-
 # Init database
 bd_escuela = BDEscuela()
 
+# ---------------------------------------------------
 # Login
 privilege = 'P'
 username = 'admin'
@@ -1069,6 +1081,18 @@ al = Alumno(
 )
 # Register Alumno
 bd_escuela.reg_alumno(al)
+# Create new Materias
+mat = Materia('Matematica', 4000)
+mat.set_notas([9, 9, 9])
+mat2 = Materia('Lengua', 4000)
+mat2.set_notas([1, 1, 1])
+mat3 = Materia('Etica', 4000)
+mat3.set_notas([4, 4, 4])
+# Add Materias
+bd_escuela.get_table('T-materias').alta(mat)
+bd_escuela.get_table('T-materias').alta(mat2)
+bd_escuela.get_table('T-materias').alta(mat3)
+# ---------------------------------------------------
 
 # Set login
 Login(root)
