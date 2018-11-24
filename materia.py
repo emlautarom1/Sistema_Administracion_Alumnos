@@ -1,30 +1,30 @@
 class Materia:
 
     def __init__(self, nombre='none', nro_reg=0):
-        self.__nombre = nombre
-        self.__nro_reg = nro_reg
-        self.__notas = [0, 0, 0]
+        self.nombre = nombre
+        self.nro_reg = nro_reg
+        self.notas = [0, 0, 0]
 
     def get_nombre(self):
-        return self.__nombre
+        return self.nombre
 
     def get_nro_reg(self):
-        return self.__nro_reg
+        return self.nro_reg
 
     def get_notas(self):
-        return self.__notas
+        return self.notas
 
     def set_notas(self, notas: list):
-        self.__notas = notas
+        self.notas = notas
 
     def set_nota_trimestre(self, trimestre: int, nota: int):
         if -1 < trimestre < 3:
-            self.__notas[trimestre] = nota
+            self.notas[trimestre] = nota
         else:
             raise ValueError
 
     def get_nota_trimestre(self, trimestre: int):
         if -1 < trimestre < 3:
-            return self.__notas[trimestre]
+            return self.notas[trimestre]
         else:
             raise ValueError

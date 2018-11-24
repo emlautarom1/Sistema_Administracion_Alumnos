@@ -64,6 +64,7 @@ def swap_view(old_view, new_view):
     else:
         raise RuntimeError
 
+
 class Login:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -112,14 +113,15 @@ class Login:
         except Exception as e:
             messagebox.showerror('Hubo un error...', "{0}".format(str(e)))
 
-# Not tested
+# Layout done
+# Logic done
 class MainMenu:
     def __init__(self, master):
         self.frame = Frame(master)
         self.frame.pack()
         # Set title
         master.title('Menú Principal')
-        
+
         # Frames
         self.system_frame = Frame(self.frame, relief='ridge', bd=5)
         self.alumno_frame = Frame(self.frame, relief='ridge', bd=5)
@@ -194,16 +196,16 @@ class MainMenu:
         self.sesion_label.grid(row=6, sticky='EW')
         self.backup_button.grid(row=7, sticky='EW')
         self.restore_button.grid(row=8, sticky='EW')
-        
+
         # Alumnos
         self.alumno_label.grid(row=1, sticky='EW')
         self.tabla_alumno_button.grid(row=2, sticky='EW')
         self.legajo_alumno_dni_button.grid(row=3, sticky='EW')
         self.listado_inasistencias_button.grid(row=4, sticky='EW')
         self.listado_curso_button.grid(row=5, sticky='EW')
-        
+
         self.alumno_frame.rowconfigure(6, minsize=20)
-        
+
         self.alumno_crud_label.grid(row=7, sticky='EW')
         self.consulta_alumno_button.grid(row=8, sticky='EW')
         self.alta_alumno_button.grid(row=9, sticky='EW')
@@ -221,7 +223,7 @@ class MainMenu:
         self.modificacion_materia_button.grid(row=8, sticky='EW')
 
         # Frame layout
-        self.system_frame.pack(side='left', padx=10, pady=10, fill='y')        
+        self.system_frame.pack(side='left', padx=10, pady=10, fill='y')
         self.alumno_frame.pack(side='left', padx=10, pady=10, fill='y')
         self.materia_frame.pack(side='left', padx=10, pady=10, fill='y')
         self.logout_button.pack(side='bottom', padx=10, pady=10)
@@ -244,9 +246,12 @@ class MainMenu:
             self.baja_materia_button.config(state='disabled')
             self.consulta_materia_button.config(state='disabled')
             self.modificacion_materia_button.config(state='disabled')
-            
+
         center(master)
 
+# Layout done
+# Logic done
+# Tested
 class RegistrarUsuario:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -299,6 +304,9 @@ class RegistrarUsuario:
     def cancel(self):
         swap_view(self, 'main_menu')
 
+# Layout done
+# Logic done
+# Tested
 class EliminarUsuario:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -346,6 +354,9 @@ class EliminarUsuario:
     def cancel(self):
         swap_view(self, 'main_menu')
 
+# Layout done
+# Logic done
+# Tested
 class TablaAlumno:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -404,6 +415,10 @@ class TablaAlumno:
     def cancel(self):
         swap_view(self, 'main_menu')
 
+
+# Layout done
+# Logic done
+# Tested
 class TablaMateria:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -450,6 +465,9 @@ class TablaMateria:
     def cancel(self):
         swap_view(self, 'main_menu')
 
+# Layout done
+# Logic done
+# Tested
 class LegajoRegistro:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -522,6 +540,9 @@ class LegajoRegistro:
     def cancel(self):
         swap_view(self, 'main_menu')
 
+# Layout done
+# Logic done
+# Tested
 class ListadoInas:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -566,6 +587,9 @@ class ListadoInas:
     def cancel(self):
         swap_view(self, 'main_menu')
 
+# Layout done
+# Logic done
+# Tested
 class ListadoCurso:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -620,7 +644,8 @@ class ListadoCurso:
         try:
             data = bd_escuela.get_table('T-alumnos').listado_reg_x_curso(
                 int(self.curso_entry.get())
-            )        
+            )
+
             # Disable multiple search
             self.search_button.config(state='disabled')
             for t in data:
@@ -640,6 +665,9 @@ class ListadoCurso:
     def cancel(self):
         swap_view(self, 'main_menu')
 
+# Layout done
+# Logic done
+# Tested
 class ConsultaAlumno:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -648,19 +676,19 @@ class ConsultaAlumno:
 
         # Data
         self.data = {
-            '__nro_reg': StringVar(),
-            '__nombre': StringVar(),
-            '__apellido': StringVar(),
-            '__dni': StringVar(),
-            '__direccion': StringVar(),
-            '__telefono': StringVar(),
-            '__email': StringVar(),
-            '__nacimiento': StringVar(),
-            '__curso': StringVar(),
-            '__alta': StringVar(),
-            '__username': StringVar(),
-            '__inasistencias': StringVar(),
-            '__concepto': StringVar()
+            'nro_reg': StringVar(),
+            'nombre': StringVar(),
+            'apellido': StringVar(),
+            'dni': StringVar(),
+            'direccion': StringVar(),
+            'telefono': StringVar(),
+            'email': StringVar(),
+            'nacimiento': StringVar(),
+            'curso': StringVar(),
+            'alta': StringVar(),
+            'username': StringVar(),
+            'inasistencias': StringVar(),
+            'concepto': StringVar()
         }
 
         # Widgets
@@ -671,29 +699,29 @@ class ConsultaAlumno:
             self.frame, text='Buscar', foreground='green', command=self.search)
         
         self.nombre_label = Label(self.frame, text='Nombre:')
-        self.nombre_data = Entry(self.frame, textvariable=self.data['__nombre'])
+        self.nombre_data = Entry(self.frame, textvariable=self.data['nombre'])
         self.apellido_label = Label(self.frame, text='Apellido:')
-        self.apellido_data = Entry(self.frame, textvariable=self.data['__apellido'])
+        self.apellido_data = Entry(self.frame, textvariable=self.data['apellido'])
         self.dni_label = Label(self.frame, text='DNI:')
-        self.dni_data = Entry(self.frame, textvariable=self.data['__dni'])
+        self.dni_data = Entry(self.frame, textvariable=self.data['dni'])
         self.direccion_label = Label(self.frame, text='Dirección:')
-        self.direccion_data = Entry(self.frame, textvariable=self.data['__direccion'])
+        self.direccion_data = Entry(self.frame, textvariable=self.data['direccion'])
         self.telefono_label = Label(self.frame, text='Teléfono:')
-        self.telefono_data = Entry(self.frame, textvariable=self.data['__telefono'])
+        self.telefono_data = Entry(self.frame, textvariable=self.data['telefono'])
         self.email_label = Label(self.frame, text='Email')
-        self.email_data = Entry(self.frame, textvariable=self.data['__email'])
+        self.email_data = Entry(self.frame, textvariable=self.data['email'])
         self.nacimiento_label = Label(self.frame, text='Fecha Nacimiento:')
-        self.nacimiento_data = Entry(self.frame, textvariable=self.data['__nacimiento'])
+        self.nacimiento_data = Entry(self.frame, textvariable=self.data['nacimiento'])
         self.curso_label = Label(self.frame, text='Curso:')
-        self.curso_data = Entry(self.frame, textvariable=self.data['__curso'])
+        self.curso_data = Entry(self.frame, textvariable=self.data['curso'])
         self.inasistencias_label = Label(self.frame, text='Inasistencias:')
-        self.inasistencias_data = Entry(self.frame, textvariable=self.data['__inasistencias'])
+        self.inasistencias_data = Entry(self.frame, textvariable=self.data['inasistencias'])
         self.concepto_label = Label(self.frame, text='Concepto:')
-        self.concepto_data = Entry(self.frame, textvariable=self.data['__concepto'])
+        self.concepto_data = Entry(self.frame, textvariable=self.data['concepto'])
         self.username_label = Label(self.frame, text='Usuario:')
-        self.username_data = Entry(self.frame, textvariable=self.data['__username'])
+        self.username_data = Entry(self.frame, textvariable=self.data['username'])
         self.alta_label = Label(self.frame, text='Fecha de Alta:')
-        self.alta_data = Entry(self.frame, textvariable=self.data['__alta'])
+        self.alta_data = Entry(self.frame, textvariable=self.data['alta'])
 
         self.return_button = Button(
             self.frame, text='Cancelar', foreground='red', command=self.cancel
@@ -744,18 +772,18 @@ class ConsultaAlumno:
         try:
             result = bd_escuela.cons_alumno(int(self.nro_reg_entry.get()))
             
-            self.data['__nombre'].set(str(result.get_nombre()))
-            self.data['__apellido'].set(str(result.get_apellido()))
-            self.data['__dni'].set(str(result.get_dni()))
-            self.data['__direccion'].set(str(result.get_direccion()))
-            self.data['__telefono'].set(str(result.get_telefono()))
-            self.data['__email'].set(str(result.get_email()))
-            self.data['__nacimiento'].set(str(result.get_nacimiento()))
-            self.data['__curso'].set(str(result.get_curso()))
-            self.data['__alta'].set(str(result.get_alta()))
-            self.data['__username'].set(str(result.get_username()))
-            self.data['__inasistencias'].set(str(result.get_inasistencias()))
-            self.data['__concepto'].set(str(result.get_concepto()))
+            self.data['nombre'].set(str(result.get_nombre()))
+            self.data['apellido'].set(str(result.get_apellido()))
+            self.data['dni'].set(str(result.get_dni()))
+            self.data['direccion'].set(str(result.get_direccion()))
+            self.data['telefono'].set(str(result.get_telefono()))
+            self.data['email'].set(str(result.get_email()))
+            self.data['nacimiento'].set(str(result.get_nacimiento()))
+            self.data['curso'].set(str(result.get_curso()))
+            self.data['alta'].set(str(result.get_alta()))
+            self.data['username'].set(str(result.get_username()))
+            self.data['inasistencias'].set(str(result.get_inasistencias()))
+            self.data['concepto'].set(str(result.get_concepto()))
 
         except Exception as e:
             messagebox.showerror('Hubo un error...', '{0}'.format(str(e)))
@@ -763,6 +791,9 @@ class ConsultaAlumno:
     def cancel(self):
         swap_view(self, 'main_menu')
 
+# Layout done
+# Logic done
+# Tested
 class AltaAlumno:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -859,6 +890,9 @@ class AltaAlumno:
     def cancel(self):
         swap_view(self, 'main_menu')
 
+# Layout done
+# Logic done
+# Tested
 class ModificarAlumno:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -867,15 +901,15 @@ class ModificarAlumno:
 
         # Data
         self.data = {
-            '__nombre': StringVar(),
-            '__apellido': StringVar(),
-            '__dni': StringVar(),
-            '__direccion': StringVar(),
-            '__telefono': StringVar(),
-            '__email': StringVar(),
-            '__nacimiento': StringVar(),
-            '__curso': StringVar(),
-            '__inasistencias': StringVar(),
+            'nombre': StringVar(),
+            'apellido': StringVar(),
+            'dni': StringVar(),
+            'direccion': StringVar(),
+            'telefono': StringVar(),
+            'email': StringVar(),
+            'nacimiento': StringVar(),
+            'curso': StringVar(),
+            'inasistencias': StringVar(),
         }
 
         # Widgets
@@ -888,23 +922,23 @@ class ModificarAlumno:
         self.return_button = Button(
             self.frame, text='Cancelar', foreground='red', command=self.cancel)
         self.nombre_label = Label(self.frame, text='Nombre:')
-        self.nombre_entry = Entry(self.frame, textvariable=self.data['__nombre'])
+        self.nombre_entry = Entry(self.frame, textvariable=self.data['nombre'])
         self.apellido_label = Label(self.frame, text='Apellido:')
-        self.apellido_entry = Entry(self.frame, textvariable=self.data['__apellido'])
+        self.apellido_entry = Entry(self.frame, textvariable=self.data['apellido'])
         self.dni_label = Label(self.frame, text='DNI:')
         self.dni_entry = Entry(self.frame, textvariable=self.data['dni'])
         self.direccion_label = Label(self.frame, text='Dirección:')
-        self.direccion_entry = Entry(self.frame, textvariable=self.data['__direccion'])
+        self.direccion_entry = Entry(self.frame, textvariable=self.data['direccion'])
         self.telefono_label = Label(self.frame, text='Teléfono:')
-        self.telefono_entry = Entry(self.frame, textvariable=self.data['__telefono'])
+        self.telefono_entry = Entry(self.frame, textvariable=self.data['telefono'])
         self.email_label = Label(self.frame, text='Email')
         self.email_entry = Entry(self.frame, textvariable=self.data['email'])
         self.nacimiento_label = Label(self.frame, text='Fecha Nacimiento:')
-        self.nacimiento_entry = Entry(self.frame, textvariable=self.data['__nacimiento'])
+        self.nacimiento_entry = Entry(self.frame, textvariable=self.data['nacimiento'])
         self.curso_label = Label(self.frame, text='Curso:')
         self.curso_entry = Entry(self.frame, textvariable=self.data['curso'])
         self.inasistencias_label = Label(self.frame, text='Inasistencias:')
-        self.inasistencias_entry = Entry(self.frame, textvariable=self.data['__inasistencias'])
+        self.inasistencias_entry = Entry(self.frame, textvariable=self.data['inasistencias'])
         self.concepto_label = Label(self.frame, text='Concepto:')
         self.concepto_combo = ttk.Combobox(self.frame, state='readonly')
         self.concepto_combo['values'] = ['Muy aceptable', 'Aceptable', 'No aceptable']
@@ -950,17 +984,15 @@ class ModificarAlumno:
         try:
             result = bd_escuela.cons_alumno(int(self.nro_reg_entry.get()))
             
-            self.data['__nombre'].set(str(result.get_nombre()))
-            self.data['__apellido'].set(str(result.get_apellido()))
-            self.data['__dni'].set(str(result.get_dni()))
-            self.data['__direccion'].set(str(result.get_direccion()))
-            self.data['__telefono'].set(str(result.get_telefono()))
-            self.data['__email'].set(str(result.get_email()))
-            self.data['__nacimiento'].set(str(result.get_nacimiento()))
-            self.data['__curso'].set(str(result.get_curso()))
-            self.data['__inasistencias'].set(str(result.get_inasistencias()))
-
-            print(result.get_concepto())
+            self.data['nombre'].set(str(result.get_nombre()))
+            self.data['apellido'].set(str(result.get_apellido()))
+            self.data['dni'].set(str(result.get_dni()))
+            self.data['direccion'].set(str(result.get_direccion()))
+            self.data['telefono'].set(str(result.get_telefono()))
+            self.data['email'].set(str(result.get_email()))
+            self.data['nacimiento'].set(str(result.get_nacimiento()))
+            self.data['curso'].set(str(result.get_curso()))
+            self.data['inasistencias'].set(str(result.get_inasistencias()))
 
             if result.get_concepto() == 'Muy aceptable':
                 self.concepto_combo.current(0)
@@ -979,16 +1011,16 @@ class ModificarAlumno:
     def modify(self):
         try:
             mods = {
-                '__nombre': self.nombre_entry.get(),
-                '__apellido': self.apellido_entry.get(),
-                '__dni': int(self.dni_entry.get()),
-                '__direccion': self.direccion_entry.get(),
-                '__telefono': self.telefono_entry.get(),
-                '__email': self.email_entry.get(),
-                '__nacimiento': eval(self.nacimiento_entry.get()),
-                '__curso': int(self.curso_entry.get()),
-                '__inasistencias': int(self.inasistencias_entry.get()),
-                '__concepto': self.concepto_combo.get()
+                'nombre': self.nombre_entry.get(),
+                'apellido': self.apellido_entry.get(),
+                'dni': int(self.dni_entry.get()),
+                'direccion': self.direccion_entry.get(),
+                'telefono': self.telefono_entry.get(),
+                'email': self.email_entry.get(),
+                'nacimiento': eval(self.nacimiento_entry.get()),
+                'curso': int(self.curso_entry.get()),
+                'inasistencias': int(self.inasistencias_entry.get()),
+                'concepto': self.concepto_combo.get()
             }
             bd_escuela.mod_alumno(int(self.nro_reg_entry.get()), mods)
             messagebox.showinfo('Exito', 'Se ha modificado el alumno.')
@@ -999,6 +1031,9 @@ class ModificarAlumno:
     def cancel(self):
         swap_view(self, 'main_menu')
 
+# Layout done
+# Logic done
+# Tested
 class BajaAlumno:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -1036,6 +1071,9 @@ class BajaAlumno:
     def cancel(self):
         swap_view(self, 'main_menu')
 
+# Layout done
+# Logic done
+# Tested
 class ConsultaMateria:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -1105,6 +1143,9 @@ class ConsultaMateria:
     def cancel(self):
         swap_view(self, 'main_menu')
 
+# Layout done
+# Logic done
+# Tested
 class AltaMateria:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -1173,6 +1214,9 @@ class AltaMateria:
     def cancel(self):
         swap_view(self, 'main_menu')
 
+# Layout done
+# Logic done
+# Tested
 class ModificarMateria:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -1261,6 +1305,9 @@ class ModificarMateria:
     def cancel(self):
         swap_view(self, 'main_menu')
 
+# Layout done
+# Logic done
+# Tested
 class BajaMateria:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -1305,6 +1352,9 @@ class BajaMateria:
     def cancel(self):
         swap_view(self, 'main_menu')
 
+# Layout done
+# Logic done
+# Tested
 class Backup:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -1349,6 +1399,9 @@ class Backup:
     def cancel(self):
         swap_view(self, 'main_menu')
 
+# Layout done
+# Logic done
+# Tested
 class Restore:
     def __init__(self, master):
         self.frame = Frame(master)
@@ -1401,7 +1454,7 @@ bd_escuela = BDEscuela()
 
 # ---------------------------------------------------
 # Testing routine
-# Login
+# # Login
 # privilege = 'P'
 # username = 'admin'
 # password = 'ad1'

@@ -26,23 +26,23 @@ def aux_2(a: Alumno):
 class TAlumnos:
 
     def __init__(self):
-        self.__listado = {}
+        self.listado = {}
 
     def alta(self, alumno: Alumno):
-        if alumno.get_nro_reg() not in self.__listado:
-            self.__listado[alumno.get_nro_reg()] = alumno
+        if alumno.get_nro_reg() not in self.listado:
+            self.listado[alumno.get_nro_reg()] = alumno
         else:
             raise KeyError
 
     def baja(self, nro_reg: int):
-        if nro_reg in self.__listado:
-            self.__listado.pop(nro_reg)
+        if nro_reg in self.listado:
+            self.listado.pop(nro_reg)
         else:
             raise KeyError
 
     def modificar(self, nro_reg: int, mods: dict):
-        if nro_reg in self.__listado:
-            al = self.__listado[nro_reg]
+        if nro_reg in self.listado:
+            al = self.listado[nro_reg]
             try:
                 for key, value in mods.items():
                     setattr(al, key, value)
@@ -53,20 +53,20 @@ class TAlumnos:
                 'No hay alumno con número de registro {0}'.format(nro_reg))
 
     def consulta(self, nro_reg: int):
-        if nro_reg in self.__listado:
-            return self.__listado[nro_reg]
+        if nro_reg in self.listado:
+            return self.listado[nro_reg]
         else:
             raise KeyError(
                 'No hay alumno con número de registro {0}'.format(nro_reg))
 
     def get_values(self):
-        return self.__listado.values()
+        return self.listado.values()
 
     def listado_inas(self):
         # Returns list of Alumnos
-        return list(filter(lambda alumno: alumno.get_inasistencias() > 15, self.__listado.values()))
+        return list(filter(lambda alumno: alumno.get_inasistencias() > 15, self.listado.values()))
 
     def listado_reg_x_curso(self, curso: int):
         # Returns list of tuples : (curso, apellido, nombre, nro_reg, dni)
-        mapped = list(map(lambda a: aux_2(a), self.__listado.values()))
+        mapped = list(map(lambda a: aux_2(a), self.listado.values()))
         return reduce(lambda acc, x: aux(acc, x, curso), mapped, [])
