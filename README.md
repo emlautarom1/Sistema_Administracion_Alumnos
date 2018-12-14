@@ -1,10 +1,8 @@
 # Sistema CRUD de Alumnos con GUI en Python 3
 
-## Objetivo: Crear un sistema completo de administracion de alumnos y suus correspondientes materias, programadores y docentes utilizando el paradigma de POO.
+### Funcionalidades:
 
-### Funcionalidades
-
-- [X] **Login**: inic_esc permite loguear al usuario al sistema, seteando el flag de privilegio en la base de datos
+- [X] **Login**: inic_esc permite loguear al usuario al sistema, seteando el flag de privilegio en la base de datos.
   
 - [X] **Añadir usuario**: reg_usuario() permite crear un nuevo usuario a partir de un privilegio, nombre y contraseña. No se utiliza para crear alumnos.
   
@@ -28,3 +26,13 @@
 * **Manejo de sesiones** (definidos en bdescuela.py):
   - [X] **Alamcenamiento en disco**: backup() toma una direccion de un archivo .json y genera una copia de todos los datos en memoria, recuperables por medio de carga_bd()
   - [X] **Inicializacion de Sesion**: carga_bd()  toma una direccion de un archivo .json y carga los datos en memoria. Si existen claves duplicadas se priorizan las que se encuentran en memoria. Se notificará al usuario en casos de que suceda.
+
+### Capturas
+
+**Ventana de Login**
+
+![Login](screens/login.png)
+
+**Menú Principal**
+
+![Menu Principal](screens/menu.png)
