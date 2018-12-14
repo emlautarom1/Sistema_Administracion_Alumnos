@@ -27,12 +27,12 @@
   - [X] **Alamcenamiento en disco**: backup() toma una direccion de un archivo .json y genera una copia de todos los datos en memoria, recuperables por medio de carga_bd()
   - [X] **Inicializacion de Sesion**: carga_bd()  toma una direccion de un archivo .json y carga los datos en memoria. Si existen claves duplicadas se priorizan las que se encuentran en memoria. Se notificará al usuario en casos de que suceda.
 
-### Capturas
+## Capturas
 
-**Ventana de Login**
+*Ventana de Login*
 
 ![Login](screens/login.png)
 
-**Menú Principal**
+*Menú Principal*
 
 ![Menu Principal](screens/menu.png)
